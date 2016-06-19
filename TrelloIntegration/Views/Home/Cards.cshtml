@@ -3,32 +3,102 @@
     var token = Session["trello_token"];
 }
 
+<style>
+    .gray {
+        //background-color: gainsboro;
+        padding: -2px;
+    }
+
+    .white {
+        //background-color: white;
+        padding: -2px;
+    }
+</style>
+
+
 <script src="~/Scripts/angular.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
 <div ng-controller="TrelloCtrl as vm">
-
-    <button ng-click="logout()">Log out</button>
-
-    <div ng-repeat="board in vm.boards">
-        <h2>{{board.name}}</h2>
-        <div ng-repeat="list in board.lists">
-            <h3>{{list.name}}</h3>
-            <div ng-repeat="card in list.cards">
-                <h4>{{card.name}}</h4>
-                <div ng-repeat="comment in card.comments">
-                    <span>{{comment.data.text}}</span>
-                </div>
-                <form ng-submit="addComment(card)">
-                    <input type="text" ng-model="card.newComment">
-                    <button type="submit" ng-click="addComment(card)">Add Comment</button>
-                </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10">
+                <h1>Your Trello boards</h1>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn-primary btn-lg btn-block" ng-click="logout()">Log out</button>
             </div>
         </div>
+
+        <div class="well" ng-repeat="board in vm.boards">
+            <div ng-click="board.isCollapsed = !board.isCollapsed">
+                <h2>
+                    {{board.name}}
+                    <span ng-show="board.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
+                    <span ng-show="!board.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                </h2>
+
+            </div>
+            <div class="well" ng-repeat="list in board.lists" ng-hide="board.isCollapsed">
+                <h3 ng-click="list.isCollapsed = !list.isCollapsed">
+                    {{list.name}}
+                    <span ng-show="list.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
+                    <span ng-show="!list.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                </h3>
+                <div class="well" ng-repeat="card in list.cards" ng-hide="list.isCollapsed">
+                    <h4 ng-click="card.isCollapsed = !card.isCollapsed">
+                        {{card.name}}
+                        <span ng-show="card.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
+                        <span ng-show="!card.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                    </h4>
+                    <div class="well comments white" ng-hide="card.isCollapsed">
+                        <div ng-repeat="comment in card.comments">
+                            <span>{{comment.data.text}}</span>
+                        </div>
+                        <form ng-submit="addComment(card)">
+                            <input type="text" ng-model="card.newComment">
+                            <button type="submit" ng-click="addComment(card)">Add Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
 </div>
+@*<div class="container">
+    <div class="list-group well">
+        <div class="list-group-item-heading">
+            Heading
+        </div>
+        <div class="list-group-item">
+            <div class="list-group">
+                <div class="list-group-item-heading">
+                    Heading again
+                </div>
+                <div class="list-group-item">
+                    hello
+                </div>
+                <div class="list-group-item">
+                    hello
+                </div>
+            </div>
 
+        </div>
+        <div class="list-group-item">
+            <div class="list-group">
+                <div class="list-group-item-heading">
+                    Heading again again
+                </div>
+                <div class="list-group-item">
+                    Yo yo yo
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
 <script>
     //TODO put into scripts
     //<div>Your Token is <span id="token">{{vm.token}}</span></div>
@@ -64,7 +134,7 @@
             //TODO add error handling
             card.comments.unshift({ data: { text: card.newComment } });
             card.newComment = "";
-    };
+        };
 
         //Get the userID for getting all the boards etc. (Maybe we only need one call here so we can get everything with the boards)
         $http.get(vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey)
@@ -77,16 +147,19 @@
                        vm.boards = response.data;
                        //Get all the lists
                        angular.forEach(vm.boards, function (board, key) {
+                           board.isCollapsed = true;
                            $http.get(vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
                               .then(function (response) {
                                   board.lists = response.data.lists;
                                   //Get all the cards
                                   angular.forEach(board.lists, function (list, key) {
+                                      list.isCollapsed = true;
                                       $http.get(vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
                                          .then(function (response) {
                                              list.cards = response.data.cards;
                                              //Get all the comments
                                              angular.forEach(list.cards, function (card, key) {
+                                                 card.isCollapsed = true;
                                                  card.newComment = "";//Init the comment entry
                                                  $http.get(vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token)
                                                     .then(function (response) {
