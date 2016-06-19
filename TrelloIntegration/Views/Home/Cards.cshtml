@@ -21,6 +21,7 @@
 
 <div ng-controller="TrelloCtrl as vm">
     <div class="container">
+
         <div class="row">
             <div class="col-lg-10">
                 <h1>Your Trello boards</h1>
@@ -30,35 +31,54 @@
             </div>
         </div>
 
-        <div class="well" ng-repeat="board in vm.boards">
-            <div ng-click="board.isCollapsed = !board.isCollapsed">
-                <h2>
-                    {{board.name}}
-                    <span ng-show="board.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
-                    <span ng-show="!board.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
-                </h2>
+        <div class="list-group well">
+            <div class="list-group-item" ng-repeat="board in vm.boards">
 
-            </div>
-            <div class="well" ng-repeat="list in board.lists" ng-hide="board.isCollapsed">
-                <h3 ng-click="list.isCollapsed = !list.isCollapsed">
-                    {{list.name}}
-                    <span ng-show="list.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
-                    <span ng-show="!list.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
-                </h3>
-                <div class="well" ng-repeat="card in list.cards" ng-hide="list.isCollapsed">
-                    <h4 ng-click="card.isCollapsed = !card.isCollapsed">
-                        {{card.name}}
-                        <span ng-show="card.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
-                        <span ng-show="!card.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
-                    </h4>
-                    <div class="well comments white" ng-hide="card.isCollapsed">
-                        <div ng-repeat="comment in card.comments">
-                            <span>{{comment.data.text}}</span>
+                <div class="list-group">
+                    <div class="list-group-item-heading" ng-click="board.isCollapsed = !board.isCollapsed">
+                        <h2>
+                            <span ng-show="board.isCollapsed">{{board.name}} </span>
+                            <span ng-show="!board.isCollapsed">Lists for the board "{{board.name}}":</span>
+                            <span ng-show="board.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
+                            <span ng-show="!board.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                        </h2>
+
+                    </div>
+                    <div class="list-group-item" ng-repeat="list in board.lists" ng-hide="board.isCollapsed">
+                        <div class="list-group">
+                            <div class="list-group-item-heading" ng-click="list.isCollapsed = !list.isCollapsed">
+                                <h3>
+                                    <span ng-show="list.isCollapsed">{{list.name}} </span>
+                                    <span ng-show="!list.isCollapsed">Cards for the list "{{list.name}}":</span>
+                                    <span ng-show="list.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
+                                    <span ng-show="!list.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                                </h3>
+
+                            </div>
+                            <div class="list-group-item" ng-repeat="card in list.cards" ng-hide="list.isCollapsed">
+                                <div class="list-group">
+                                    <div class="list-group-item-heading" ng-click="card.isCollapsed = !card.isCollapsed">
+                                        <h4>
+                                            <span ng-show="card.isCollapsed">{{card.name}} </span>
+                                            <span ng-show="!card.isCollapsed">Comments for the card "{{card.name}}":</span>
+                                            <span ng-show="card.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
+                                            <span ng-show="!card.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="list-group-item comments" ng-hide="card.isCollapsed">
+                                        <div ng-repeat="comment in card.comments">
+                                            <span>{{comment.data.text}}</span>
+                                        </div>
+                                        <form class="input-group" ng-submit="addComment(card)">
+                                            <div class="input-group-btn">
+                                                <input class="form-control" type="text" ng-model="card.newComment">
+                                                <button class="btn btn-default" placeholder="Enter a comment" type="submit" ng-click="addComment(card)">Add Comment</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <form ng-submit="addComment(card)">
-                            <input type="text" ng-model="card.newComment">
-                            <button type="submit" ng-click="addComment(card)">Add Comment</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -69,36 +89,36 @@
 
 </div>
 @*<div class="container">
-    <div class="list-group well">
-        <div class="list-group-item-heading">
-            Heading
-        </div>
-        <div class="list-group-item">
-            <div class="list-group">
-                <div class="list-group-item-heading">
-                    Heading again
-                </div>
-                <div class="list-group-item">
-                    hello
-                </div>
-                <div class="list-group-item">
-                    hello
-                </div>
+        <div class="list-group well">
+            <div class="list-group-item-heading">
+                Heading
             </div>
+            <div class="list-group-item">
+                <div class="list-group">
+                    <div class="list-group-item-heading">
+                        Heading again
+                    </div>
+                    <div class="list-group-item">
+                        hello
+                    </div>
+                    <div class="list-group-item">
+                        hello
+                    </div>
+                </div>
 
-        </div>
-        <div class="list-group-item">
-            <div class="list-group">
-                <div class="list-group-item-heading">
-                    Heading again again
-                </div>
-                <div class="list-group-item">
-                    Yo yo yo
+            </div>
+            <div class="list-group-item">
+                <div class="list-group">
+                    <div class="list-group-item-heading">
+                        Heading again again
+                    </div>
+                    <div class="list-group-item">
+                        Yo yo yo
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 <script>
     //TODO put into scripts
     //<div>Your Token is <span id="token">{{vm.token}}</span></div>
