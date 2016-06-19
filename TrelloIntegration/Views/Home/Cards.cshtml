@@ -1,25 +1,11 @@
-﻿
-@{
-    var token = Session["trello_token"];
-}
-
-<style>
-    .gray {
-        //background-color: gainsboro;
-        padding: -2px;
-    }
-
-    .white {
-        //background-color: white;
-        padding: -2px;
-    }
-</style>
-
+﻿<script>
+    var token = "@Session["trello_token"]";
+</script>
 
 <script src="~/Scripts/angular.min.js"></script>
 <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
-<div ng-controller="TrelloCtrl as vm">
+<div ng-controller="TrelloCtrl">
     <div class="container">
 
         <div class="row">
@@ -32,16 +18,18 @@
         </div>
 
         <div class="list-group well">
-            <div class="list-group-item" ng-repeat="board in vm.boards">
+            <div class="list-group-item" ng-repeat="board in boards">
 
                 <div class="list-group">
                     <div class="list-group-item-heading" ng-click="board.isCollapsed = !board.isCollapsed">
                         <h2>
-                            <span ng-show="board.isCollapsed">{{board.name}} </span>
-                            <span ng-show="!board.isCollapsed">Lists for the board "{{board.name}}":</span>
+                            {{board.name}}
                             <span ng-show="board.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
                             <span ng-show="!board.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
                         </h2>
+                        <h4>
+                            <span ng-show="!board.isCollapsed">Lists:</span>
+                        </h4>
 
                     </div>
                     <div class="list-group-item" ng-repeat="list in board.lists" ng-hide="board.isCollapsed">
@@ -66,15 +54,16 @@
                                         </h4>
                                     </div>
                                     <div class="list-group-item comments" ng-hide="card.isCollapsed">
-                                        <div ng-repeat="comment in card.comments">
-                                            <span>{{comment.data.text}}</span>
-                                        </div>
                                         <form class="input-group" ng-submit="addComment(card)">
                                             <div class="input-group-btn">
                                                 <input class="form-control" type="text" ng-model="card.newComment">
                                                 <button class="btn btn-default" placeholder="Enter a comment" type="submit" ng-click="addComment(card)">Add Comment</button>
                                             </div>
                                         </form>
+                                        <div ng-repeat="comment in card.comments">
+                                            <span>{{comment.data.text}}</span>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -83,179 +72,54 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
 </div>
-@*<div class="container">
-        <div class="list-group well">
-            <div class="list-group-item-heading">
-                Heading
-            </div>
-            <div class="list-group-item">
-                <div class="list-group">
-                    <div class="list-group-item-heading">
-                        Heading again
-                    </div>
-                    <div class="list-group-item">
-                        hello
-                    </div>
-                    <div class="list-group-item">
-                        hello
-                    </div>
-                </div>
 
-            </div>
-            <div class="list-group-item">
-                <div class="list-group">
-                    <div class="list-group-item-heading">
-                        Heading again again
-                    </div>
-                    <div class="list-group-item">
-                        Yo yo yo
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>*@
 <script>
-    //TODO put into scripts
-    //<div>Your Token is <span id="token">{{vm.token}}</span></div>
-    angular.module('app', []);
 
-    angular
-        .module('app')
-        .controller('TrelloCtrl', ['$scope', '$http', TrelloCtrl])
+    ////Get the userID for getting all the boards etc. (Maybe we only need one call here so we can get everything with the boards)
+    //$http.get(vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey)
+    //    .then(function (response) {
+    //        vm.memberID = response.data.idMember;
+    //        //TODO get rid of all the nesting
+    //        //Get all the boards
+    //        $http.get(vm.apiBase + "members/" + vm.memberID + "/boards?key=" + vm.applicationKey + "&token=" + vm.token)
+    //           .then(function (response) {
+    //               vm.boards = response.data;
+    //               //Get all the lists
+    //               angular.forEach(vm.boards, function (board, key) {
+    //                   board.isCollapsed = true;
+    //                   $http.get(vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
+    //                      .then(function (response) {
+    //                          board.lists = response.data.lists;
+    //                          //Get all the cards
+    //                          angular.forEach(board.lists, function (list, key) {
+    //                              list.isCollapsed = true;
+    //                              $http.get(vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
+    //                                 .then(function (response) {
+    //                                     list.cards = response.data.cards;
+    //                                     //Get all the comments
+    //                                     angular.forEach(list.cards, function (card, key) {
+    //                                         card.isCollapsed = true;
+    //                                         card.newComment = "";//Init the comment entry
+    //                                         $http.get(vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token)
+    //                                            .then(function (response) {
+    //                                                card.comments = response.data.filter(function (action) { return action.type == "commentCard" });
+    //                                            });
+    //                                     });
 
-    function TrelloCtrl($scope, $http) {
-        var vm = this;
-
-
-        vm.token = "@token";//TODO Bind using angular later
-        vm.apiBase = "https://api.trello.com/1/";
-        vm.applicationKey = "fed9c5de2188e9af5f1ca25c1af501ab";
-        var apiTokenSuffix = "tokens/" + vm.token + "?key=" + vm.applicationKey;
-
-        $scope.logout = function () {
-            //TODO update the url to be the action
-            $http.post("/Home/Logout").success(function (returnData) {
-                if (returnData.ok)
-                    window.location = returnData.newurl;
-            });
-        };
-
-        $scope.addComment = function (card) {
-            //take the text from the comment
-            if (!card.newComment)
-                return;
-
-            $http.post(vm.apiBase + "cards/" + card.id + "/actions/comments?key=" + vm.applicationKey + "&token=" + vm.token, { text: card.newComment });
-            //TODO add error handling
-            card.comments.unshift({ data: { text: card.newComment } });
-            card.newComment = "";
-        };
-
-        //Get the userID for getting all the boards etc. (Maybe we only need one call here so we can get everything with the boards)
-        $http.get(vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey)
-            .then(function (response) {
-                vm.memberID = response.data.idMember;
-                //TODO get rid of all the nesting
-                //Get all the boards
-                $http.get(vm.apiBase + "members/" + vm.memberID + "/boards?key=" + vm.applicationKey + "&token=" + vm.token)
-                   .then(function (response) {
-                       vm.boards = response.data;
-                       //Get all the lists
-                       angular.forEach(vm.boards, function (board, key) {
-                           board.isCollapsed = true;
-                           $http.get(vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
-                              .then(function (response) {
-                                  board.lists = response.data.lists;
-                                  //Get all the cards
-                                  angular.forEach(board.lists, function (list, key) {
-                                      list.isCollapsed = true;
-                                      $http.get(vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
-                                         .then(function (response) {
-                                             list.cards = response.data.cards;
-                                             //Get all the comments
-                                             angular.forEach(list.cards, function (card, key) {
-                                                 card.isCollapsed = true;
-                                                 card.newComment = "";//Init the comment entry
-                                                 $http.get(vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token)
-                                                    .then(function (response) {
-                                                        card.comments = response.data.filter(function (action) { return action.type == "commentCard" });
-                                                    });
-                                             });
-
-                                         });
-                                  });
-                              });
-                       });
-                   });
-            });
-
-
-    }
+    //                                 });
+    //                          });
+    //                      });
+    //               });
+    //           });
+    //    });
 
     //var getMemberURL = vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey;
     //var getBoardsURL = vm.apiBase + "members/" + vm.memberID + "/boards?key=" + vm.applicationKey + "&token=" + vm.token;
     //var getListsURL = vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token;
     //var getCardsURL = vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token;
+    //var getCommentsURL = vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token;
 
-    //var getMemberID = function () {
-    //    return $http.get(getMemberURL)
-    //        .then(function (response) {
-    //            vm.memberID = response.data.idMember;
-    //            //getBoardsForUser();
-    //            //Use success to cascade the call to get the boards etc.
-    //            //Not sure if this is going to work
-    //        });
-    //};
-
-    //var getBoardsForUser = function () {
-    //    $http.get(getBoardsURL)
-    //        .then(function (response) {
-    //            vm.boards = response.data;
-    //            angular.forEach(vm.boards, function (board, key) {
-    //                getListsForBoard(board);
-    //            });
-    //        });
-    //};
-
-    //var getListsForBoard = function (board) {
-    //    $http.get(getListsURL)
-    //        .then(function (response) {
-    //            board.lists = response.data.lists;
-    //            //Get all the cards
-    //            angular.forEach(board.lists, function (list, key) {
-    //                getCardsForList(list);
-    //            });
-    //        });
-    //};
-
-    //var getCardsForList = function (list) {
-    //    $http.get(getCardsURL)
-    //        .then(function (response) {
-    //            $http.get(getCardsURL)
-    //                   .then(function (response) {
-    //                       list.cards = response.data.cards;
-    //                       //Get all the comments
-    //                       angular.forEach(list.cards, function (card, key) {
-    //                           $http.get(vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token)
-    //                              .then(function (response) {
-    //                                  card.comments = response.data.filter(function (action) { return action.type == "commentCard" });
-    //                              });
-    //                       });
-
-    //                   });
-    //        });
-    //};
-
-    ////TODO figure out the best way to break free of the cascading api calls!!!!
-    //var callTrelloAPI = function (url, callback) {
-    //    $http.get(url).then(callback());
-    //};
-
-    //getMemberID().Success(GetBoards().Success(getListsForBoard()))
 
 </script>
