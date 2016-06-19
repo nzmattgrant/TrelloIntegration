@@ -1,0 +1,168 @@
+﻿
+@{
+    var token = Session["trello_token"];
+}
+
+<script src="~/Scripts/angular.min.js"></script>
+
+<div ng-controller="TrelloCtrl as vm">
+
+    <button ng-click="logout()">Log out</button>
+
+    <div ng-repeat="board in vm.boards">
+        <h2>{{board.name}}</h2>
+        <div ng-repeat="list in board.lists">
+            <h3>{{list.name}}</h3>
+            <div ng-repeat="card in list.cards">
+                <h4>{{card.name}}</h4>
+                <div ng-repeat="comment in card.comments">
+                    <span>{{comment.data.text}}</span>
+                </div>
+                <form ng-submit="addComment(card)">
+                    <input type="text" ng-model="card.newComment">
+                    <button type="submit" ng-click="addComment(card)">Add Comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    //TODO put into scripts
+    //<div>Your Token is <span id="token">{{vm.token}}</span></div>
+    angular.module('app', []);
+
+    angular
+        .module('app')
+        .controller('TrelloCtrl', ['$scope', '$http', TrelloCtrl])
+
+    function TrelloCtrl($scope, $http) {
+        var vm = this;
+
+
+        vm.token = "@token";//TODO Bind using angular later
+        vm.apiBase = "https://api.trello.com/1/";
+        vm.applicationKey = "fed9c5de2188e9af5f1ca25c1af501ab";
+        var apiTokenSuffix = "tokens/" + vm.token + "?key=" + vm.applicationKey;
+
+        $scope.logout = function () {
+            //TODO update the url to be the action
+            $http.post("/Home/Logout").success(function (returnData) {
+                if (returnData.ok)
+                    window.location = returnData.newurl;
+            });
+        };
+
+        $scope.addComment = function (card) {
+            //take the text from the comment
+            if (!card.newComment)
+                return;
+
+            $http.post(vm.apiBase + "cards/" + card.id + "/actions/comments?key=" + vm.applicationKey + "&token=" + vm.token, { text: card.newComment });
+            //TODO add error handling
+            card.comments.unshift({ data: { text: card.newComment } });
+            card.newComment = "";
+    };
+
+        //Get the userID for getting all the boards etc. (Maybe we only need one call here so we can get everything with the boards)
+        $http.get(vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey)
+            .then(function (response) {
+                vm.memberID = response.data.idMember;
+                //TODO get rid of all the nesting
+                //Get all the boards
+                $http.get(vm.apiBase + "members/" + vm.memberID + "/boards?key=" + vm.applicationKey + "&token=" + vm.token)
+                   .then(function (response) {
+                       vm.boards = response.data;
+                       //Get all the lists
+                       angular.forEach(vm.boards, function (board, key) {
+                           $http.get(vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
+                              .then(function (response) {
+                                  board.lists = response.data.lists;
+                                  //Get all the cards
+                                  angular.forEach(board.lists, function (list, key) {
+                                      $http.get(vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
+                                         .then(function (response) {
+                                             list.cards = response.data.cards;
+                                             //Get all the comments
+                                             angular.forEach(list.cards, function (card, key) {
+                                                 card.newComment = "";//Init the comment entry
+                                                 $http.get(vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token)
+                                                    .then(function (response) {
+                                                        card.comments = response.data.filter(function (action) { return action.type == "commentCard" });
+                                                    });
+                                             });
+
+                                         });
+                                  });
+                              });
+                       });
+                   });
+            });
+
+
+    }
+
+    //var getMemberURL = vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey;
+    //var getBoardsURL = vm.apiBase + "members/" + vm.memberID + "/boards?key=" + vm.applicationKey + "&token=" + vm.token;
+    //var getListsURL = vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token;
+    //var getCardsURL = vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token;
+
+    //var getMemberID = function () {
+    //    return $http.get(getMemberURL)
+    //        .then(function (response) {
+    //            vm.memberID = response.data.idMember;
+    //            //getBoardsForUser();
+    //            //Use success to cascade the call to get the boards etc.
+    //            //Not sure if this is going to work
+    //        });
+    //};
+
+    //var getBoardsForUser = function () {
+    //    $http.get(getBoardsURL)
+    //        .then(function (response) {
+    //            vm.boards = response.data;
+    //            angular.forEach(vm.boards, function (board, key) {
+    //                getListsForBoard(board);
+    //            });
+    //        });
+    //};
+
+    //var getListsForBoard = function (board) {
+    //    $http.get(getListsURL)
+    //        .then(function (response) {
+    //            board.lists = response.data.lists;
+    //            //Get all the cards
+    //            angular.forEach(board.lists, function (list, key) {
+    //                getCardsForList(list);
+    //            });
+    //        });
+    //};
+
+    //var getCardsForList = function (list) {
+    //    $http.get(getCardsURL)
+    //        .then(function (response) {
+    //            $http.get(getCardsURL)
+    //                   .then(function (response) {
+    //                       list.cards = response.data.cards;
+    //                       //Get all the comments
+    //                       angular.forEach(list.cards, function (card, key) {
+    //                           $http.get(vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token)
+    //                              .then(function (response) {
+    //                                  card.comments = response.data.filter(function (action) { return action.type == "commentCard" });
+    //                              });
+    //                       });
+
+    //                   });
+    //        });
+    //};
+
+    ////TODO figure out the best way to break free of the cascading api calls!!!!
+    //var callTrelloAPI = function (url, callback) {
+    //    $http.get(url).then(callback());
+    //};
+
+    //getMemberID().Success(GetBoards().Success(getListsForBoard()))
+
+</script>
