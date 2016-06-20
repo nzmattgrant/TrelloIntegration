@@ -80,7 +80,7 @@
                                         <form class="input-group" ng-submit="addComment(card)">
                                             <div class="input-group-btn">
                                                 <input class="form-control" type="text" ng-model="card.newComment">
-                                                <button class="btn btn-default" placeholder="Enter a comment" type="submit" ng-click="addComment(card)">Add Comment</button>
+                                                <button class="btn btn-success" ng-class="{ disabled: card.sendingComment }" placeholder="Enter a comment" type="submit" ng-click="addComment(card)">Add Comment</button>
                                             </div>
                                         </form>
                                         <div ng-repeat="comment in card.comments">

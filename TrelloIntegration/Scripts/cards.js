@@ -37,6 +37,7 @@ function TrelloCtrl($scope, $http) {
 
         if (!card.newComment)
             return;
+        card.sendingComment = true;
 
         $http.post(apiBase + "cards/" + card.id + "/actions/comments?key=" + applicationKey + "&token=" + token, { text: card.newComment })
             .success(function () {
@@ -44,8 +45,10 @@ function TrelloCtrl($scope, $http) {
                 card.comments.unshift({ data: { text: card.newComment } });
                 displaySuccessMessage("Comment added successfully");
                 card.newComment = "";
+                card.sendingComment = false;
             })
             .error(function () {
+                card.sendingComment = false;
                 displayErrorMessage("There was an error trying to add your comment. Please try again");
             });
     };
