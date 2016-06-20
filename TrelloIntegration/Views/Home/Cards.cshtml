@@ -74,14 +74,18 @@
                                         </h4>
                                     </div>
                                     <div class="list-group-item comments" ng-hide="card.isCollapsed">
-                                        <form class="input-group" ng-submit="addComment(card)">
+                                        <form class="navbar-form" ng-submit="addComment(card)">
                                             <div class="input-group-btn">
                                                 <input class="form-control" type="text" ng-model="card.newComment">
                                                 <button class="btn btn-success" ng-class="{ disabled: card.sendingComment }" placeholder="Enter a comment" type="submit">Add Comment</button>
                                             </div>
                                         </form>
-                                        <div ng-repeat="comment in card.comments">
-                                            <span>{{comment.data.text}}</span>
+                                        <div class="panel">
+                                            <ul>
+                                                <li ng-repeat="comment in card.comments">
+                                                    <span>{{comment.data.text}}</span>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
