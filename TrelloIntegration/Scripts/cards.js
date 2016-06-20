@@ -39,7 +39,7 @@ function TrelloCtrl($scope, $http) {
             return;
         card.sendingComment = true;
 
-        $http.post(apiBase + "cards/" + card.id + "/actions/comments?key=" + applicationKey + "&token=" + token, { text: card.newComment })
+        $http.post(apiBase + "cards/" + card.id + "/actions/comments" + apiTokenSuffix, { text: card.newComment })
             .success(function () {
                 //Unshift to add the the top of the list
                 card.comments.unshift({ data: { text: card.newComment } });
@@ -67,6 +67,7 @@ function TrelloCtrl($scope, $http) {
         $http.get(apiBase + "members/" + memberID + "/boards" + apiTokenSuffix)
             .success(function (response) {
                 $scope.boards = response;
+                //Get all the lists
                 angular.forEach($scope.boards, function (board, key) {
                     board.isCollapsed = true;
                     getListsForBoard(board);
@@ -78,7 +79,7 @@ function TrelloCtrl($scope, $http) {
     };
 
     var getListsForBoard = function (board) {
-        $http.get(apiBase + "boards/" + board.id + apiTokenSuffix + "&lists=open&list_fields=name&fields=name")
+        $http.get(apiBase + "boards/" + board.id + apiTokenSuffix + "&lists=open")
             .success(function (response) {
                 board.lists = response.lists;
                 //Get all the cards
@@ -93,7 +94,7 @@ function TrelloCtrl($scope, $http) {
     };
 
     var getCardsForList = function (list) {
-        $http.get(apiBase + "lists/" + list.id + apiTokenSuffix + "&cards=open&card_fields=name")
+        $http.get(apiBase + "lists/" + list.id + apiTokenSuffix + "&cards=open")
             .success(function (response) {
                 list.cards = response.cards;
                 //Get all the comments

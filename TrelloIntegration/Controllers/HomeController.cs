@@ -39,7 +39,7 @@ namespace TrelloIntegration.Controllers
         }
 
         //No antiforgery token on this for the demo
-        //Any cross site calls to logout would be mainly just annoying.
+        //Any cross site calls to logout would be mainly just be annoying.
         [HttpPost]
         public ActionResult Logout()
         {
