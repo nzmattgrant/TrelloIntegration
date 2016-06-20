@@ -8,7 +8,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/Home/Login",
+            url: loginAction,
             data: {
                 token: userToken,
                 __RequestVerificationToken: anitforgeryToken
@@ -17,7 +17,9 @@
                 if (returnData.ok)
                     window.location = returnData.newurl;
             },
-            //TODO add in a fail function
+            error: function() { 
+                $(".errorMessage").removeClass("hidden");
+            },
             dataType: "json"
         });
     }

@@ -1,20 +1,31 @@
-﻿<script>
-    var token = "@Session["trello_token"]";
-
-</script>
-
-@{ 
+﻿
+@{
     ViewBag.Title = "Your Trello Boards";
+
 }
 
 @section scripts {
+    <script>
+        var token = "@Session["trello_token"]";
+        var logoutAction = "@Url.Action("Logout", "Home", null)";
+    </script>
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/cards.js"></script>
 }
 
 <div ng-controller="TrelloCtrl">
 
-    <div class="container"  ng-cloak>
+    <div class="container">
+
+        <div class="alert alert-danger" role="alert" ng-show="hasError">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <span ng-bind="errorMessage"></span>
+        </div>
+
+        <div class="alert alert-success" role="alert" ng-show="showSuccessMessage">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <span ng-bind="successMessage"></span>
+        </div>
 
         <div class="row">
             <div class="col-lg-10">
@@ -31,10 +42,12 @@
                 <div class="list-group">
                     <div class="list-group-item-heading" ng-click="board.isCollapsed = !board.isCollapsed">
                         <h2>
-                            {{board.name}}
-                            <small ng-show="!board.isCollapsed">Lists:</small>
-                            <span ng-show="board.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
-                            <span ng-show="!board.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                            <span class="clickable">
+                                {{board.name}}
+                                <small ng-show="!board.isCollapsed">Lists:</small>
+                            </span>
+                            <span ng-show="board.isCollapsed" class="pull-right glyphicon glyphicon-plus clickable"></span>
+                            <span ng-show="!board.isCollapsed" class="pull-right glyphicon glyphicon-minus clickable"></span>
                         </h2>
 
                     </div>
@@ -42,10 +55,12 @@
                         <div class="list-group">
                             <div class="list-group-item-heading" ng-click="list.isCollapsed = !list.isCollapsed">
                                 <h3>
-                                    {{list.name}}
-                                    <small ng-show="!list.isCollapsed">Cards:</small>
-                                    <span ng-show="list.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
-                                    <span ng-show="!list.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                                    <span class="clickable">
+                                        {{list.name}}
+                                        <small ng-show="!list.isCollapsed">Cards:</small>
+                                    </span>
+                                    <span ng-show="list.isCollapsed" class="pull-right glyphicon glyphicon-plus clickable"></span>
+                                    <span ng-show="!list.isCollapsed" class="pull-right glyphicon glyphicon-minus clickable"></span>
                                 </h3>
 
                             </div>
@@ -53,10 +68,12 @@
                                 <div class="list-group">
                                     <div class="list-group-item-heading" ng-click="card.isCollapsed = !card.isCollapsed">
                                         <h4>
-                                            {{card.name}}
-                                            <small ng-show="!card.isCollapsed">Comments:</small>
-                                            <span ng-show="card.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
-                                            <span ng-show="!card.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
+                                            <span class="clickable">
+                                                {{card.name}}
+                                                <small ng-show="!card.isCollapsed">Comments:</small>
+                                            </span>
+                                            <span ng-show="card.isCollapsed" class="pull-right glyphicon glyphicon-plus clickable"></span>
+                                            <span ng-show="!card.isCollapsed" class="pull-right glyphicon glyphicon-minus clickable"></span>
                                         </h4>
                                     </div>
                                     <div class="list-group-item comments" ng-hide="card.isCollapsed">

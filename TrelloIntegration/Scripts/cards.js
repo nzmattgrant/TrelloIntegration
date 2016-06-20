@@ -10,19 +10,27 @@ function TrelloCtrl($scope, $http) {
     //Closed over variables
     var apiBase = "https://api.trello.com/1/";
     var applicationKey = "fed9c5de2188e9af5f1ca25c1af501ab";
-    //var apiTokenSuffix = "tokens/" + token + "?key=" + applicationKey;
     var apiTokenSuffix = "?key=" + applicationKey + "&token=" + token;
 
+    var displayErrorMessage = function (message) {
+        $scope.hasError = true;
+        $scope.errorMessage = message;
+    }
+
+    var displaySuccessMessage = function (message) {
+        $scope.showSuccessMessage = true;
+        $scope.successMessage = message;
+    }
+
     $scope.logout = function () {
-        //TODO update the url to be the action
-        $http.post("/Home/Logout")
+        $http.post(logoutAction)
             .success(function (returnData) {
                 if (returnData.ok)
                     window.location = returnData.newurl;
             })
-        .error(function () {
-            //TODO
-        });
+            .error(function () {
+                displayErrorMessage("There was an error trying to log you out");
+            });
     };
 
     $scope.addComment = function (card) {
@@ -30,17 +38,16 @@ function TrelloCtrl($scope, $http) {
         if (!card.newComment)
             return;
 
-        $http
-            .post(apiBase + "cards/" + card.id + "/actions/comments?key=" + applicationKey + "&token=" + token, { text: card.newComment })
+        $http.post(apiBase + "cards/" + card.id + "/actions/comments?key=" + applicationKey + "&token=" + token, { text: card.newComment })
             .success(function () {
                 //Unshift to add the the top of the list
                 card.comments.unshift({ data: { text: card.newComment } });
+                displaySuccessMessage("Comment added successfully");
                 card.newComment = "";
             })
-        .error(function () {
-            //TODO add error handling
-        });
-
+            .error(function () {
+                displayErrorMessage("There was an error trying to add your comment. Please try again");
+            });
     };
 
     //Use the token to get the member id then set up the boards
@@ -49,13 +56,8 @@ function TrelloCtrl($scope, $http) {
             getBoardsForUser(response.idMember);
         })
         .error(function () {
-
+            displayErrorMessage("There was an error accessing the trello user!");
         });
-
-
-    var dsiplayErrorMessage = function (message) {
-
-    };
 
     //Functions that cascade calls to the trello API to retrieve the nested Board->List->Card->Comment structure from Trello
     var getBoardsForUser = function (memberID) {
@@ -67,9 +69,9 @@ function TrelloCtrl($scope, $http) {
                     getListsForBoard(board);
                 });
             })
-        .error(function () {
-            //TODO
-        });
+            .error(function () {
+                displayErrorMessage("There was an error retrieving your boards from Trello!");
+            });
     };
 
     var getListsForBoard = function (board) {
@@ -82,9 +84,9 @@ function TrelloCtrl($scope, $http) {
                     getCardsForList(list);
                 });
             })
-        .error(function () {
-            //TODO
-        });
+            .error(function () {
+                displayErrorMessage("There was an error retrieving your card lists from Trello!");
+            });
     };
 
     var getCardsForList = function (list) {
@@ -97,9 +99,9 @@ function TrelloCtrl($scope, $http) {
                     getCommentsForCard(card);
                 });
             })
-         .error(function () {
-             //TODO
-         });
+             .error(function () {
+                 displayErrorMessage("There was an error retrieving your cards from Trello!");
+             });
     };
 
     var getCommentsForCard = function (card) {
@@ -107,9 +109,9 @@ function TrelloCtrl($scope, $http) {
             .success(function (response) {
                 card.comments = response.filter(function (action) { return action.type == "commentCard" });
             })
-        .error(function () {
-            //TODO
-        });
+            .error(function () {
+                displayErrorMessage("There was an error retrieving your card comments from Trello!");
+            });
 
     };
 
