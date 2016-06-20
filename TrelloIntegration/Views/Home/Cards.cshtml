@@ -1,12 +1,20 @@
 ﻿<script>
     var token = "@Session["trello_token"]";
+
 </script>
 
-<script src="~/Scripts/angular.min.js"></script>
-<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+@{ 
+    ViewBag.Title = "Your Trello Boards";
+}
+
+@section scripts {
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/cards.js"></script>
+}
 
 <div ng-controller="TrelloCtrl">
-    <div class="container">
+
+    <div class="container"  ng-cloak>
 
         <div class="row">
             <div class="col-lg-10">
@@ -24,20 +32,18 @@
                     <div class="list-group-item-heading" ng-click="board.isCollapsed = !board.isCollapsed">
                         <h2>
                             {{board.name}}
+                            <small ng-show="!board.isCollapsed">Lists:</small>
                             <span ng-show="board.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
                             <span ng-show="!board.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
                         </h2>
-                        <h4>
-                            <span ng-show="!board.isCollapsed">Lists:</span>
-                        </h4>
 
                     </div>
                     <div class="list-group-item" ng-repeat="list in board.lists" ng-hide="board.isCollapsed">
                         <div class="list-group">
                             <div class="list-group-item-heading" ng-click="list.isCollapsed = !list.isCollapsed">
                                 <h3>
-                                    <span ng-show="list.isCollapsed">{{list.name}} </span>
-                                    <span ng-show="!list.isCollapsed">Cards for the list "{{list.name}}":</span>
+                                    {{list.name}}
+                                    <small ng-show="!list.isCollapsed">Cards:</small>
                                     <span ng-show="list.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
                                     <span ng-show="!list.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
                                 </h3>
@@ -47,8 +53,8 @@
                                 <div class="list-group">
                                     <div class="list-group-item-heading" ng-click="card.isCollapsed = !card.isCollapsed">
                                         <h4>
-                                            <span ng-show="card.isCollapsed">{{card.name}} </span>
-                                            <span ng-show="!card.isCollapsed">Comments for the card "{{card.name}}":</span>
+                                            {{card.name}}
+                                            <small ng-show="!card.isCollapsed">Comments:</small>
                                             <span ng-show="card.isCollapsed" class="pull-right glyphicon glyphicon-plus"></span>
                                             <span ng-show="!card.isCollapsed" class="pull-right glyphicon glyphicon-minus"></span>
                                         </h4>
@@ -74,52 +80,3 @@
         </div>
     </div>
 </div>
-
-<script>
-
-    ////Get the userID for getting all the boards etc. (Maybe we only need one call here so we can get everything with the boards)
-    //$http.get(vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey)
-    //    .then(function (response) {
-    //        vm.memberID = response.data.idMember;
-    //        //TODO get rid of all the nesting
-    //        //Get all the boards
-    //        $http.get(vm.apiBase + "members/" + vm.memberID + "/boards?key=" + vm.applicationKey + "&token=" + vm.token)
-    //           .then(function (response) {
-    //               vm.boards = response.data;
-    //               //Get all the lists
-    //               angular.forEach(vm.boards, function (board, key) {
-    //                   board.isCollapsed = true;
-    //                   $http.get(vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
-    //                      .then(function (response) {
-    //                          board.lists = response.data.lists;
-    //                          //Get all the cards
-    //                          angular.forEach(board.lists, function (list, key) {
-    //                              list.isCollapsed = true;
-    //                              $http.get(vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token)
-    //                                 .then(function (response) {
-    //                                     list.cards = response.data.cards;
-    //                                     //Get all the comments
-    //                                     angular.forEach(list.cards, function (card, key) {
-    //                                         card.isCollapsed = true;
-    //                                         card.newComment = "";//Init the comment entry
-    //                                         $http.get(vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token)
-    //                                            .then(function (response) {
-    //                                                card.comments = response.data.filter(function (action) { return action.type == "commentCard" });
-    //                                            });
-    //                                     });
-
-    //                                 });
-    //                          });
-    //                      });
-    //               });
-    //           });
-    //    });
-
-    //var getMemberURL = vm.apiBase + "tokens/" + vm.token + "?key=" + vm.applicationKey;
-    //var getBoardsURL = vm.apiBase + "members/" + vm.memberID + "/boards?key=" + vm.applicationKey + "&token=" + vm.token;
-    //var getListsURL = vm.apiBase + "boards/" + board.id + "?lists=open&list_fields=name&fields=name&key=" + vm.applicationKey + "&token=" + vm.token;
-    //var getCardsURL = vm.apiBase + "lists/" + list.id + "?cards=open&card_fields=name&key=" + vm.applicationKey + "&token=" + vm.token;
-    //var getCommentsURL = vm.apiBase + "cards/" + card.id + "/actions?key=" + vm.applicationKey + "&token=" + vm.token;
-
-
-</script>

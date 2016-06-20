@@ -1,20 +1,23 @@
 ﻿$(document).ready(function () {
     var regexToken = /[&#]?token=([0-9a-f]{64})/;
     var hashFragmentToken = regexToken.exec(location.hash);
-    var token = hashFragmentToken ? hashFragmentToken[0].split("=")[1] : null;
-    if (token) {
+    var userToken = hashFragmentToken ? hashFragmentToken[0].split("=")[1] : null;
+    if (userToken) {
 
-        //https://api.trello.com/1/tokens/91a6408305c1e5ec1b0b306688bc2e2f8fe67abf6a2ecec38c17e5b894fcf866?key=fed9c5de2188e9af5f1ca25c1af501ab
-        //Maybe use this as a check later
+        var anitforgeryToken = $("input[name=__RequestVerificationToken]").val()
 
         $.ajax({
             type: "POST",
-            url: "/Home/Index",
-            data: { token: token },
+            url: "/Home/Login",
+            data: {
+                token: userToken,
+                __RequestVerificationToken: anitforgeryToken
+            },
             success: function (returnData) {
                 if (returnData.ok)
                     window.location = returnData.newurl;
             },
+            //TODO add in a fail function
             dataType: "json"
         });
     }

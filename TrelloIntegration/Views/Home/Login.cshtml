@@ -1,9 +1,11 @@
 ﻿@{
-    ViewBag.Title = "Trello Integration Login";
+    ViewBag.Title = "Login";
+}
+@section scripts {
+    <script src="~/Scripts/login.js"></script>
 }
 
-<script src="~/Scripts/jquery-1.10.2.js"></script>
-<script src="~/Scripts/index.js"></script>
+@Html.AntiForgeryToken()
 
 <div class="row">
     <div class="col-lg-12 text-center">
