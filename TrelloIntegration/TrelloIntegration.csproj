@@ -203,6 +203,8 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Board.cs" />
     <Compile Include="ViewModels\Card.cs" />
+    <Compile Include="ViewModels\Comment.cs" />
+    <Compile Include="ViewModels\Dashboard.cs" />
     <Compile Include="ViewModels\List.cs" />
   </ItemGroup>
   <ItemGroup>

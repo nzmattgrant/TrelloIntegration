@@ -7,7 +7,9 @@ namespace TrelloIntegration.ViewModels
 {
     public class Card
     {
-        public string Name { get; set; }
-        public IEnumerable<string> Comments { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public int idList { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }

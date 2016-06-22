@@ -7,7 +7,9 @@ namespace TrelloIntegration.ViewModels
 {
     public class Board
     {
-        public string Name { get; set; }
+        //Lower case to match with the API calls
+        public int id { get; set; }
+        public string name { get; set; }
         public IEnumerable<List> Lists { get; set; }
     }
 }

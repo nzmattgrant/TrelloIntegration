@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TrelloIntegration.Services;
+using TrelloIntegration.ViewModels;
 
 namespace TrelloIntegration.Controllers
 {
@@ -29,13 +31,18 @@ namespace TrelloIntegration.Controllers
             return Json(new { ok = true, newurl = Url.Action("Login") });
         }
 
+        //TODO rename to dashboard
         [HttpGet]
         public ActionResult Cards()
         {
             var token = HttpContext.Session["trello_token"];
             if (token == null)
                 return RedirectToAction("Login");
-            return View();
+
+            var dashboardViewModel = new DashboardViewModel();
+            dashboardViewModel.SetUp(token.ToString());
+
+            return View(dashboardViewModel);
         }
 
         //No antiforgery token on this for the demo
