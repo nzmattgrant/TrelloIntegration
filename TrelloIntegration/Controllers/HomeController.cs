@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TrelloIntegration.Services;
@@ -32,15 +33,16 @@ namespace TrelloIntegration.Controllers
         }
 
         //TODO rename to dashboard
+        //Set up a partial method so that we are not taking forever hitting the trello api
         [HttpGet]
-        public ActionResult Cards()
+        public async Task<ActionResult> Cards()
         {
             var token = HttpContext.Session["trello_token"];
             if (token == null)
                 return RedirectToAction("Login");
 
             var dashboardViewModel = new DashboardViewModel();
-            dashboardViewModel.SetUp(token.ToString());
+            await dashboardViewModel.SetUp(token.ToString());
 
             return View(dashboardViewModel);
         }

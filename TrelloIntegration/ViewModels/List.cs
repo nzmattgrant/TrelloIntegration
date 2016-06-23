@@ -7,9 +7,9 @@ namespace TrelloIntegration.ViewModels
 {
     public class List
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string name { get; set; }
-        public int idBoard { get; set; }
+        public string idBoard { get; set; }
         public IEnumerable<Card> Cards { get; set; }
     }
 }

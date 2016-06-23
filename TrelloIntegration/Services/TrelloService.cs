@@ -16,25 +16,25 @@ namespace TrelloIntegration.Services
 
     public class TrelloService : ITrelloService
     {
-        private const string API_BASE = "";
-        private const string APPLICATION_KEY = "";
-        private string USER_TOKEN = "";
+        private const string API_BASE = "https://api.trello.com/1/";
+        private const string APPLICATION_KEY = "fed9c5de2188e9af5f1ca25c1af501ab";
+        private string UserToken = "";//Needs to be set on creation
 
         private string getAuthTokenAPIFragment()
         {
-            return "";
+            return "?key=" + APPLICATION_KEY + "&token=" + UserToken;
         }
 
-        public void SetUserToken(string userToken)
+        public TrelloService(string userToken)
         {
-            USER_TOKEN = userToken;
+            UserToken = userToken;
         }
 
         public async Task<string> GetMemberIDForUserToken()
         {
             using (var client = new HttpClient())
             {
-                var uri = API_BASE + "tokens/" + USER_TOKEN + "?key=" + APPLICATION_KEY;
+                var uri = API_BASE + "tokens/" + UserToken + "?key=" + APPLICATION_KEY;
                 var response = await client.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
@@ -49,54 +49,46 @@ namespace TrelloIntegration.Services
 
         public async Task<IEnumerable<Board>> GetBoardsForUser(string memberID)
         {
+            //TODO where open?
             var url = string.Format("{0}members/{1}/boards{2}", API_BASE, memberID, getAuthTokenAPIFragment());
             return await getCollectionFromAPIAsync<Board>(url);
         }
 
-        /
-        private async Task<IEnumerable<List>> GetListsForUser(string memberID)
+        private async Task<IEnumerable<List>> GetListsForBoard(string boardID)
         {
-            var url = string.Format("{0}members/{1}/boards{2}&lists=all", API_BASE, memberID, getAuthTokenAPIFragment());
+            var url = string.Format("{0}boards/{1}/lists{2}", API_BASE, boardID, getAuthTokenAPIFragment());
             return await getCollectionFromAPIAsync<List>(url);
         }
 
-        //You can't get cards available for a user like this
-        public async Task<IEnumerable<Card>> GetCardsForUser(string memberID)
+        public async Task<IEnumerable<Card>> GetCardsForList(string listID)
         {
-            var url = "";
+            var url = string.Format("{0}lists/{1}/cards{2}", API_BASE, listID, getAuthTokenAPIFragment());
             return await getCollectionFromAPIAsync<Card>(url);
         }
 
-        public async Task<IEnumerable<Comment>> GetCommentsForUser(string memberID)
+        public async Task<IEnumerable<Comment>> GetCommentsForCard(string cardID)
         {
-            var url = "";
+            var url = string.Format("{0}cards/{1}/actions{2}&filter=commentCard", API_BASE, cardID, getAuthTokenAPIFragment());
             return await getCollectionFromAPIAsync<Comment>(url);
         }
 
+        //Ideally there would be a way to get all the items associated with a users boards in one hit.
+        //I can't see a way to do this so we have to nest calls
         public async Task<IEnumerable<Board>> GetBoardsWithNestedCollectionsForUser(string memberID)
         {
-            //Async calls to the trello api
-            //We are using the member id to retrieve the structures to that we have to do as few calls to the api as possible
-            var comments = await GetCommentsForUser(memberID);
-            var cards = await GetCardsForUser(memberID);
-            var lists = await GetListsForUser(memberID);
             var boards = await GetBoardsForUser(memberID);
-
-            foreach (var card in cards)
-            {
-                card.Comments = comments.Where(c => c.card.id == card.id);
-            }
-
-            foreach (var list in lists)
-            {
-                list.Cards = cards.Where(c => c.idList == list.id);
-            }
-
             foreach (var board in boards)
             {
-                board.Lists = lists.Where(l => l.idBoard == board.id);
+                board.Lists = await GetListsForBoard(board.id);
+                foreach (var list in board.Lists)
+                {
+                    list.Cards = await GetCardsForList(list.id);
+                    foreach (var card in list.Cards)
+                    {
+                        card.Comments = await GetCommentsForCard(card.id);
+                    }
+                }
             }
-
             return boards;
         }
 
@@ -117,69 +109,5 @@ namespace TrelloIntegration.Services
                 return new List<T>();
             }
         }
-
-        //        = function(memberID) {
-        //        $http.get()
-        //            .success(function (response)
-        //        {
-        //                $scope.boards = response;
-        //            //Get all the lists
-        //            angular.forEach($scope.boards, function(board, key) {
-        //                board.isCollapsed = true;
-        //                getListsForBoard(board);
-        //            });
-        //        })
-        //            .error(function ()
-        //        {
-        //            displayErrorMessage("There was an error retrieving your boards from Trello!");
-        //        });
-        //    };
-
-        //    var getListsForBoard = function(board) {
-        //        $http.get(apiBase + "boards/" + board.id + apiTokenSuffix + "&lists=open")
-        //            .success(function (response)
-        //    {
-        //        board.lists = response.lists;
-        //        //Get all the cards
-        //        angular.forEach(board.lists, function(list, key) {
-        //            list.isCollapsed = true;
-        //            getCardsForList(list);
-        //        });
-        //    })
-        //            .error(function ()
-        //    {
-        //        displayErrorMessage("There was an error retrieving your card lists from Trello!");
-        //    });
-        //    };
-
-        //var getCardsForList = function(list) {
-        //        $http.get(apiBase + "lists/" + list.id + apiTokenSuffix + "&cards=open")
-        //            .success(function (response)
-        //{
-        //    list.cards = response.cards;
-        //    //Get all the comments
-        //    angular.forEach(list.cards, function(card, key) {
-        //        card.isCollapsed = true;
-        //        getCommentsForCard(card);
-        //    });
-        }
-        //             .error(function ()
-        //{
-        //    displayErrorMessage("There was an error retrieving your cards from Trello!");
-        //});
-        //    };
-
-        //    var getCommentsForCard = function(card) {
-        //        $http.get(apiBase + "cards/" + card.id + "/actions" + apiTokenSuffix)
-        //            .success(function (response)
-        //{
-        //    card.comments = response.filter(function(action) { return action.type == "commentCard" });
-        //})
-        //            .error(function ()
-        //{
-        //    displayErrorMessage("There was an error retrieving your card comments from Trello!");
-        //});
-
-        //    };
-        //    }
-    //})
+    }
+}
