@@ -1,39 +1,76 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web;
 using TrelloIntegration.ViewModels;
 
 namespace TrelloIntegration.Services
 {
+    public class Member
+    {
+
+    }
+
     public class TrelloService : ITrelloService
     {
-        public string GetMemberIDForUserToken(string userToken)
+        private const string API_BASE = "";
+        private const string APPLICATION_KEY = "";
+        private string USER_TOKEN = "";
+
+        private string getAuthTokenAPIFragment()
         {
-            throw new NotImplementedException();
+            return "";
+        }
+
+        public void SetUserToken(string userToken)
+        {
+            USER_TOKEN = userToken;
+        }
+
+        public async Task<string> GetMemberIDForUserToken()
+        {
+            using (var client = new HttpClient())
+            {
+                var uri = API_BASE + "tokens/" + USER_TOKEN + "?key=" + APPLICATION_KEY;
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    JObject returnedObject = JObject.Parse(json);
+                    return returnedObject["idMember"].ToString();
+                }
+
+                return "";
+            }
         }
 
         public async Task<IEnumerable<Board>> GetBoardsForUser(string memberID)
         {
-            throw new NotImplementedException();
+            var url = string.Format("{0}members/{1}/boards{2}", API_BASE, memberID, getAuthTokenAPIFragment());
+            return await getCollectionFromAPIAsync<Board>(url);
         }
 
+        /
         private async Task<IEnumerable<List>> GetListsForUser(string memberID)
         {
-            throw new NotImplementedException();
+            var url = string.Format("{0}members/{1}/boards{2}&lists=all", API_BASE, memberID, getAuthTokenAPIFragment());
+            return await getCollectionFromAPIAsync<List>(url);
         }
 
+        //You can't get cards available for a user like this
         public async Task<IEnumerable<Card>> GetCardsForUser(string memberID)
         {
-            throw new NotImplementedException();
+            var url = "";
+            return await getCollectionFromAPIAsync<Card>(url);
         }
 
         public async Task<IEnumerable<Comment>> GetCommentsForUser(string memberID)
         {
-            throw new NotImplementedException();
+            var url = "";
+            return await getCollectionFromAPIAsync<Comment>(url);
         }
 
         public async Task<IEnumerable<Board>> GetBoardsWithNestedCollectionsForUser(string memberID)
@@ -65,29 +102,24 @@ namespace TrelloIntegration.Services
 
 
 
-        private async Task<IEnumerable<T>> getFromAPIAsync<T>(string uri)
+        private async Task<IEnumerable<T>> getCollectionFromAPIAsync<T>(string uri)
         {
             using (var client = new HttpClient())
             {
-                var trelloAPIBase = "";
-                client.BaseAddress = new Uri(trelloAPIBase);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = await client.GetAsync(uri);
+                var json = await response.Content.ReadAsStringAsync();
 
-                IEnumerable <T> collection = null;
-
-                HttpResponseMessage response = await client.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
-                    //IEnumerable <T> collection = await response.Content. .<IEnumerable<T>>();
-                    //Console.WriteLine("{0}\t${1}\t{2}", product.Name, product.Price, product.Category);
+                    return JsonConvert.DeserializeObject<IEnumerable<T>>(json);
                 }
 
-                return collection;
+                return new List<T>();
             }
         }
+
         //        = function(memberID) {
-        //        $http.get(apiBase + "members/" + memberID + "/boards" + apiTokenSuffix)
+        //        $http.get()
         //            .success(function (response)
         //        {
         //                $scope.boards = response;
@@ -130,7 +162,7 @@ namespace TrelloIntegration.Services
         //        card.isCollapsed = true;
         //        getCommentsForCard(card);
         //    });
-        //})
+        }
         //             .error(function ()
         //{
         //    displayErrorMessage("There was an error retrieving your cards from Trello!");
@@ -150,4 +182,4 @@ namespace TrelloIntegration.Services
 
         //    };
         //    }
-    }
+    //})
