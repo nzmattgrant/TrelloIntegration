@@ -1,0 +1,24 @@
+﻿@model IEnumerable<TrelloIntegration.ViewModels.List>
+
+@foreach (var list in Model)
+{
+    <div class="list-group-item" ng-hide="board.isCollapsed">
+        <div class="list-group">
+            <div class="list-group-item-heading" ng-click="list.isCollapsed = !list.isCollapsed">
+                <h3>
+                    <span class="clickable">
+                        @list.name
+                        <small ng-show="!list.isCollapsed">Cards:</small>
+                    </span>
+                    <span ng-show="list.isCollapsed" class="pull-right glyphicon glyphicon-plus clickable"></span>
+                    <span ng-show="!list.isCollapsed" class="pull-right glyphicon glyphicon-minus clickable"></span>
+                </h3>
+            </div>
+            <div class="cards @list.id"></div>
+        </div>
+    </div>
+    <script>
+        //Go get the list of lists from the server
+        GetCardsFromServer("@list.id");
+    </script>
+}

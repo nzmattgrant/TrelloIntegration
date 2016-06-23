@@ -1,0 +1,47 @@
+﻿@model TrelloIntegration.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "Your Trello Boards";
+
+}
+
+@section scripts {
+    <script>
+        var token = "@Session["trello_token"]";
+        var logoutAction = "@Url.Action("Logout", "Home", null)";
+    </script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/cards.js"></script>
+    <script src="~/Scripts/dashboard.js"></script>
+}
+<div ng-controller="TrelloCtrl">
+    <div class="container">
+
+        <div class="alert alert-danger" role="alert" ng-show="hasError">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <span ng-bind="errorMessage"></span>
+        </div>
+
+        <div class="alert alert-success" role="alert" ng-show="showSuccessMessage">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <span ng-bind="successMessage"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-10">
+                <h1>Your Trello boards</h1>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn-primary btn-lg btn-block" ng-click="logout()">Log out</button>
+            </div>
+        </div>
+
+        <div class="list-group well">
+            <div class="boards"></div>
+        </div>
+    </div>
+</div>
+<script>
+    //Go get the list of lists from the server
+    GetBoardsFromServer();
+</script>

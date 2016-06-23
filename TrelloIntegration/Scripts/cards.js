@@ -12,6 +12,8 @@ function TrelloCtrl($scope, $http) {
     var applicationKey = "fed9c5de2188e9af5f1ca25c1af501ab";
     var apiTokenSuffix = "?key=" + applicationKey + "&token=" + token;
 
+    $scope.board = [];
+
     var displayErrorMessage = function (message) {
         $scope.hasError = true;
         $scope.errorMessage = message;

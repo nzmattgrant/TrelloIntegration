@@ -1,0 +1,36 @@
+﻿
+@model IEnumerable<TrelloIntegration.ViewModels.Card>
+
+@foreach (var card in Model)
+{
+    <div class="list-group-item" ng-hide='cards["@card.id"].isCollapsed'>
+        <div class="list-group">
+            <div class="list-group-item-heading" ng-click='cards["@card.id"].isCollapsed = !cards["@card.id"].isCollapsed'>
+                <h4>
+                    <span class="clickable">
+                        @card.name
+                        <small ng-show='!cards["@card.id"].isCollapsed'>Comments:</small>
+                    </span>
+                    <span ng-show='cards["@card.id"].isCollapsed' class="pull-right glyphicon glyphicon-plus clickable"></span>
+                    <span ng-show='!cards["@card.id"].isCollapsed' class="pull-right glyphicon glyphicon-minus clickable"></span>
+                </h4>
+            </div>
+            <div class="list-group-item comments">
+                <form class="navbar-form" ng-submit="addComment(card)">
+                    <div class="input-group-btn">
+                        <input class="form-control" type="text" ng-model="card.newComment">
+                        <button class="btn btn-success" ng-class="{ disabled: card.sendingComment }" placeholder="Enter a comment" type="submit">Add Comment</button>
+                    </div>
+                </form>
+                <div class="panel">
+                    <ul class="comments @card.id"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        //Go get the list of lists from the server
+        GetCommentsFromServer("@card.id");
+    </script>
+}
+
