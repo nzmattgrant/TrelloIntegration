@@ -4,12 +4,10 @@
 }
 @section scripts {
     <script>
-        var loginAction = "@Url.Action("Login", "Home", null)";
+        var loginAction = "@Url.Action("Login", "Account", null)";
     </script>
     <script src="~/Scripts/login.js"></script>
 }
-
-@Html.AntiForgeryToken()
 
 <div class="container">
 

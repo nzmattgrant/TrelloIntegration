@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TrelloIntegration.Models;
 using TrelloIntegration.ViewModels;
 
 namespace TrelloIntegration.Services
@@ -43,6 +44,25 @@ namespace TrelloIntegration.Services
 
                 return "";
             }
+
+        }
+
+        public async Task<User> GetMemberForUserToken()
+        {
+            var uri = API_BASE + "tokens/" + UserToken + "/member?key=" + APPLICATION_KEY;
+            return await getFromAPIAsync<User>(uri);
+        }
+
+        public async Task<Board> GetBoard(string boardID)
+        {
+            var url = string.Format("{0}boards/{1}{2}", API_BASE, boardID, getAuthTokenAPIFragment());
+            return await getFromAPIAsync<Board>(url);
+        }
+
+        public async Task<Card> GetCard(string cardID)
+        {
+            var url = string.Format("{0}Cards/{1}{2}", API_BASE, cardID, getAuthTokenAPIFragment());
+            return await getFromAPIAsync<Card>(url);
         }
 
         public async Task<IEnumerable<Board>> GetBoardsForUser(string memberID)
@@ -87,8 +107,6 @@ namespace TrelloIntegration.Services
         //I can't see a way to do this so we have to nest calls
         public async Task<IEnumerable<Board>> GetBoardsWithNestedCollectionsForUser(string memberID)
         {
-            DateTime start = DateTime.Now;
-            Debug.WriteLine(start);
             var boards = await GetBoardsForUser(memberID);
             foreach (var board in boards)
             {
@@ -110,12 +128,23 @@ namespace TrelloIntegration.Services
                 }
             }
             return boards;
-            DateTime end = DateTime.Now;
-            Debug.WriteLine(end);
-            Debug.WriteLine(end - start);
         }
 
+        private async Task<T> getFromAPIAsync<T>(string uri) where T : new()
+        {
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(uri);
+                var json = await response.Content.ReadAsStringAsync();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<T>(json);
+                }
+
+                return new T();
+            }
+        }
 
         private async Task<IEnumerable<T>> getCollectionFromAPIAsync<T>(string uri)
         {

@@ -25,7 +25,7 @@
     }
 
     $("Button.login").click(function () {
-        var key = "fed9c5de2188e9af5f1ca25c1af501ab";//Developer key
+        var key = "fed9c5de2188e9af5f1ca25c1af501ab";//App key
         var redirectUri = window.location.href;//Get the base of the site added
         window.location = "https://trello.com/1/authorize?response_type=token&key=" + key + "&redirect_uri=" + redirectUri + "&callback_method=fragment&scope=read%2Cwrite&expiration=never&name=Trello+Integration+Demo";
     });

@@ -1,8 +1,9 @@
-﻿@model TrelloIntegration.ViewModels.DashboardViewModel
+﻿
+@model TrelloIntegration.ViewModels.Board
 
 @{
-    ViewBag.Title = "Your Trello Boards";
-
+    //TODO change to board detail view model
+    ViewBag.Title = Model.name;
 }
 
 @section scripts {
@@ -12,7 +13,6 @@
     </script>
 }
 <script src="~/Scripts/dashboard.js"></script>
-
 <div class="container">
 
     @*<div class="alert alert-danger" role="alert" ng-show="hasError">
@@ -27,7 +27,7 @@
 
     <div class="row">
         <div class="col-lg-10">
-            <h1>Your Trello boards</h1>
+            <h1>@Model.name</h1>
         </div>
         <div class="col-lg-2">
             <button class="btn-primary btn-lg btn-block logout">Log out</button>
@@ -35,13 +35,26 @@
     </div>
 
     <div class="well">
-        @foreach (var board in Model.Boards)
+        @foreach (var list in Model.Lists)
         {
-            <a class="btn btn-block btn-default" href="/dashboard/board?boardID=@board.id">
-                <h1>
-                    @board.name
-                </h1>
-            </a>
+            <div class="list-group-item">
+                <div class="list-group">
+                    <div class="list-group-item-heading">
+                        <h1>
+                            @list.name
+                        </h1>
+                    </div>
+                    @foreach (var card in list.Cards)
+                    {
+                        <a class="btn btn-block btn-default" href="/dashboard/card?cardID=@card.id">
+                            <h2>
+                                @card.name
+                            </h2>
+                        </a>
+                    }
+                </div>
+            </div>
         }
     </div>
 </div>
+
