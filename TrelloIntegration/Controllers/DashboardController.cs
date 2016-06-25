@@ -28,7 +28,6 @@ namespace TrelloIntegration.Controllers
             _db = db;
         }
 
-
         public async Task<ActionResult> Index()
         {
             var user = getUserUsingCookie();
@@ -46,18 +45,10 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var board = await _service.GetBoard(boardID, user.TrelloToken);
-            var cards = await _service.GetCardsForBoard(boardID, user.TrelloToken);
-            var lists = await _service.GetListsForBoard(boardID, user.TrelloToken);
+            var boardDetailViewModel = new BoardDetailViewModel();
+            await boardDetailViewModel.SetUp(_service, user, boardID);
 
-            foreach (var list in lists)
-            {
-                list.Cards = cards.Where(c => c.IDList == list.ID);
-            }
-
-            board.Lists = lists;
-
-            return View(board);
+            return View(boardDetailViewModel);
         }
 
         [HttpGet]
@@ -67,12 +58,10 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var card = await _service.GetCard(cardID, user.TrelloToken);
-            var comments = await _service.GetCommentsForCard(cardID, user.TrelloToken);
+            var cardDetailViewModel = new CardDetailViewModel();
+            await cardDetailViewModel.SetUp(_service, user, cardID);
 
-            card.Comments = comments;
-
-            return View(card);
+            return View(cardDetailViewModel);
         }
 
         [HttpPost, ValidateAntiForgeryToken]

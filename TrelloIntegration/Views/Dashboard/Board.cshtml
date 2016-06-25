@@ -1,8 +1,8 @@
 ﻿
-@model TrelloIntegration.ViewModels.BoardViewModel
+@model TrelloIntegration.ViewModels.BoardDetailViewModel
 
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Board.Name;
 }
 
 <div class="container">
@@ -10,7 +10,7 @@
     @Html.Partial("DashboardTop")
 
     <div class="well">
-        @foreach (var list in Model.Lists)
+        @foreach (var list in Model.Board.Lists)
         {
             <div class="list-group-item">
                 <div class="list-group">

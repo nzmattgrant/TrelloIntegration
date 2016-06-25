@@ -206,7 +206,9 @@
     <Compile Include="Services\ITrelloService.cs" />
     <Compile Include="Services\TrelloService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\BoardDetailViewModel.cs" />
     <Compile Include="ViewModels\BoardViewModel.cs" />
+    <Compile Include="ViewModels\CardDetailViewModel.cs" />
     <Compile Include="ViewModels\CardViewModel.cs" />
     <Compile Include="ViewModels\CommentViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
