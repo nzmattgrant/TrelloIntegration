@@ -204,11 +204,11 @@
     <Compile Include="Services\ITrelloService.cs" />
     <Compile Include="Services\TrelloService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\Board.cs" />
-    <Compile Include="ViewModels\Card.cs" />
-    <Compile Include="ViewModels\Comment.cs" />
-    <Compile Include="ViewModels\Dashboard.cs" />
-    <Compile Include="ViewModels\List.cs" />
+    <Compile Include="ViewModels\BoardViewModel.cs" />
+    <Compile Include="ViewModels\CardViewModel.cs" />
+    <Compile Include="ViewModels\CommentViewModel.cs" />
+    <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\ListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -258,6 +258,7 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\Board.cshtml" />
     <Content Include="Views\Dashboard\Card.cshtml" />
+    <Content Include="Views\Dashboard\DashboardTop.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

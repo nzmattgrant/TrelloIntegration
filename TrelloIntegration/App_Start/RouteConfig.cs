@@ -14,10 +14,23 @@ namespace TrelloIntegration
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+               name: "Board",
+               url: "Dashboard/Board/{boardID}",
+               defaults: new { controller = "Dashboard", action = "Board", boardID = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
+               name: "Card",
+               url: "Dashboard/Card/{cardID}",
+               defaults: new { controller = "Dashboard", action = "Card", cardID = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional }
             );
+
         }
     }
 }

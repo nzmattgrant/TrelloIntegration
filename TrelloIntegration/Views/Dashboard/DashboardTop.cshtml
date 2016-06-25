@@ -1,0 +1,23 @@
+﻿<script>
+        var logoutAction = "@Url.Action("Logout", "Account", null)";
+</script>
+<script src="~/Scripts/dashboard.js"></script>
+
+<div class="alert alert-danger hidden" role="alert" ng-show="hasError">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span ng-bind="errorMessage"></span>
+    </div>
+
+    <div class="alert alert-success hidden" role="alert" ng-show="showSuccessMessage">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span ng-bind="successMessage"></span>
+    </div>
+
+<div class="row">
+    <div class="col-lg-10">
+        <h1>@ViewBag.Title</h1>
+    </div>
+    <div class="col-lg-2">
+        <button class="btn-primary btn-lg btn-block logout">Log out</button>
+    </div>
+</div>

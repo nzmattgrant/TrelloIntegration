@@ -5,11 +5,11 @@ using System.Web;
 
 namespace TrelloIntegration.ViewModels
 {
-    public class Card
+    public class ListViewModel
     {
         public string ID { get; set; }
         public string Name { get; set; }
-        public string IDList { get; set; }
-        public IEnumerable<Comment> Comments { get; set; }
+        public string IDBoard { get; set; }
+        public IEnumerable<CardViewModel> Cards { get; set; }
     }
 }

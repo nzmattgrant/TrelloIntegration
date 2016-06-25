@@ -1,38 +1,13 @@
 ﻿
-@model TrelloIntegration.ViewModels.Board
+@model TrelloIntegration.ViewModels.BoardViewModel
 
 @{
-    //TODO change to board detail view model
-    ViewBag.Title = Model.name;
+    ViewBag.Title = Model.Name;
 }
 
-@section scripts {
-    <script>
-        var token = "@Session["trello_token"]";
-        var logoutAction = "@Url.Action("Logout", "Account", null)";
-    </script>
-}
-<script src="~/Scripts/dashboard.js"></script>
 <div class="container">
 
-    @*<div class="alert alert-danger" role="alert" ng-show="hasError">
-            <span class="glyphicon glyphicon-exclamation-sign"></span>
-            <span ng-bind="errorMessage"></span>
-        </div>
-
-        <div class="alert alert-success" role="alert" ng-show="showSuccessMessage">
-            <span class="glyphicon glyphicon-exclamation-sign"></span>
-            <span ng-bind="successMessage"></span>
-        </div>*@
-
-    <div class="row">
-        <div class="col-lg-10">
-            <h1>@Model.name</h1>
-        </div>
-        <div class="col-lg-2">
-            <button class="btn-primary btn-lg btn-block logout">Log out</button>
-        </div>
-    </div>
+    @Html.Partial("DashboardTop")
 
     <div class="well">
         @foreach (var list in Model.Lists)
@@ -41,12 +16,12 @@
                 <div class="list-group">
                     <div class="list-group-item-heading">
                         <h1>
-                            @list.name
+                            @list.Name
                         </h1>
                     </div>
                     @foreach (var card in list.Cards)
                     {
-                        <a class="btn btn-block btn-default" href="/dashboard/card?cardID=@card.ID">
+                        <a class="btn btn-block btn-default" href="/dashboard/card/@card.ID">
                             <h2>
                                 @card.Name
                             </h2>
