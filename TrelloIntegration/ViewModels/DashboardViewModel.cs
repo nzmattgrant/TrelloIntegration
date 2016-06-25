@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using TrelloIntegration.Models;
 using TrelloIntegration.Services;
 
 namespace TrelloIntegration.ViewModels
@@ -11,5 +12,10 @@ namespace TrelloIntegration.ViewModels
     {
         public string UserToken { get; set; }
         public IEnumerable<BoardViewModel> Boards { get; set; }
+
+        public async Task SetUp(ITrelloService service, User user)
+        {
+            Boards = await service.GetBoardsForUser(user.ID, user.TrelloToken);
+        }
     }
 }

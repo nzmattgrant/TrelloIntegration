@@ -35,7 +35,7 @@ namespace TrelloIntegration.Controllers
                 return RedirectToAction("Login", "Account");
 
             var dashboardViewModel = new DashboardViewModel();
-            dashboardViewModel.Boards = await _service.GetBoardsForUser(user.ID, user.TrelloToken);
+            await dashboardViewModel.SetUp(_service, user);
             return View(dashboardViewModel);
         }
 
