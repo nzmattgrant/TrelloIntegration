@@ -15,29 +15,6 @@ namespace TrelloIntegration.Controllers
         private TrelloService _service { get; set; }
         private TrelloIntegrationContext _db = new TrelloIntegrationContext();
         public const string TRELLO_USER_COOKIE_NAME = "TrelloIntegrationUser";
-        //private string _trelloAuthToken = null;
-        //private string _memberId = null;
-
-        //private void ensureTokenIsSet()
-        //{
-        //    //TODO i'm not sure if this is a good place to get the cookie
-        //    var userCookie = HttpContext.Request.Cookies.Get(TRELLO_USER_COOKIE_NAME);
-
-        //    if (userCookie == null || userCookie.Value == null)
-        //        _service = null;
-
-        //    var userID = userCookie.Value;
-
-        //    var user = _db.Users.FirstOrDefault(u => u.id == userID);
-
-        //    if (user == null)
-        //        _service = null;
-
-        //    _service = new TrelloService(user.TrelloToken);
-
-        //    _trelloAuthToken = user.TrelloToken;
-        //    _memberId = user.id;
-        //}
 
         public async Task<ActionResult> Index()
         {
@@ -78,7 +55,7 @@ namespace TrelloIntegration.Controllers
             var cards = await _service.GetCardsForBoard(boardID);
             var lists = await _service.GetListsForBoard(boardID);
 
-            foreach(var list in lists)
+            foreach (var list in lists)
             {
                 list.Cards = cards.Where(c => c.idList == list.id);
             }
@@ -88,6 +65,7 @@ namespace TrelloIntegration.Controllers
             return View(board);
         }
 
+        [HttpGet]
         public async Task<ActionResult> Card(string cardID)
         {
             var userCookie = HttpContext.Request.Cookies.Get(TRELLO_USER_COOKIE_NAME);
@@ -110,5 +88,32 @@ namespace TrelloIntegration.Controllers
 
             return View(card);
         }
-    }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddComment(string cardID, string comment)
+        {
+            var userCookie = HttpContext.Request.Cookies.Get(TRELLO_USER_COOKIE_NAME);
+
+            if (userCookie == null || userCookie.Value == null)
+                return RedirectToAction("Login", "Account");
+
+            var userID = userCookie.Value;
+
+            var user = _db.Users.FirstOrDefault(u => u.id == userID);
+
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+
+            _service = new TrelloService(user.TrelloToken);
+
+            await _service.AddComment(cardID, comment);
+
+            return RedirectToAction("Card", "Dashboard", new { cardID = cardID });
+        }
+
+        //public async Task<ActionResult> AddComment(string cardID, string comment)
+        //{
+
+
+        //}
 }

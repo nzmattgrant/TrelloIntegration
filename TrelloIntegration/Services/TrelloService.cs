@@ -11,7 +11,6 @@ using TrelloIntegration.ViewModels;
 
 namespace TrelloIntegration.Services
 {
-
     //TODO add in tests and error handling
     public class TrelloService : ITrelloService
     {
@@ -27,6 +26,20 @@ namespace TrelloIntegration.Services
         public TrelloService(string userToken)
         {
             UserToken = userToken;
+        }
+
+        public async Task AddComment(string cardID, string comment)
+        {
+            var uri = API_BASE + "cards/" + cardID + "/actions/comments" + getAuthTokenAPIFragment();
+
+            using (var client = new HttpClient())
+            {
+                var commentContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("text", comment)
+                });
+                var response = await client.PostAsync(uri, commentContent);
+            }
         }
 
         public async Task<string> GetMemberIDForUserToken()
