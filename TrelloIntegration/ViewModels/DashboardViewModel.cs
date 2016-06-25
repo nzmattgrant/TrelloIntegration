@@ -11,10 +11,5 @@ namespace TrelloIntegration.ViewModels
     {
         public string UserToken { get; set; }
         public IEnumerable<BoardViewModel> Boards { get; set; }
-
-        public async Task SetUp(TrelloService service, string memberID)
-        {
-            Boards = await service.GetBoardsForUser(memberID);
-        }
     }
 }

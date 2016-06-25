@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrelloIntegration", "TrelloIntegration\TrelloIntegration.csproj", "{64DD8A5D-3DF5-40FD-A25B-11E1A5F3B1FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrelloIntegration.Tests", "TrelloIntegration.Tests\TrelloIntegration.Tests.csproj", "{DB983211-427A-4BCF-9528-98C24B69E422}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{64DD8A5D-3DF5-40FD-A25B-11E1A5F3B1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64DD8A5D-3DF5-40FD-A25B-11E1A5F3B1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64DD8A5D-3DF5-40FD-A25B-11E1A5F3B1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB983211-427A-4BCF-9528-98C24B69E422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB983211-427A-4BCF-9528-98C24B69E422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB983211-427A-4BCF-9528-98C24B69E422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB983211-427A-4BCF-9528-98C24B69E422}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
