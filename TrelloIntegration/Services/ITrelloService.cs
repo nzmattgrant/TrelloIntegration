@@ -11,17 +11,17 @@ namespace TrelloIntegration.Services
 
         Task<User> GetMemberForUserToken(string userToken);
 
-        Task<BoardViewModel> GetBoard(string boardID, string userToken);
+        Task<Board> GetBoard(string boardID, string userToken);
 
-        Task<CardViewModel> GetCard(string cardID, string userToken);
+        Task<Card> GetCard(string cardID, string userToken);
 
-        Task<IEnumerable<BoardViewModel>> GetBoardsForUser(string memberID, string userToken);
+        Task<IEnumerable<Board>> GetBoardsForUser(string memberID, string userToken);
 
-        Task<IEnumerable<ListViewModel>> GetListsForBoard(string boardID, string userToken);
+        Task<IEnumerable<List>> GetListsForBoard(string boardID, string userToken);
 
-        Task<IEnumerable<CardViewModel>> GetCardsForBoard(string boardID, string userToken);
+        Task<IEnumerable<Card>> GetCardsForBoard(string boardID, string userToken);
 
-        Task<IEnumerable<CommentViewModel>> GetCommentsForCard(string cardID, string userToken);
+        Task<IEnumerable<Comment>> GetCommentsForCard(string cardID, string userToken);
 
         Task AddComment(string cardID, string comment, string userToken);
     }

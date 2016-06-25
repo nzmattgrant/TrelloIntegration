@@ -20,13 +20,13 @@ namespace TrelloIntegration.Tests.ViewModels
             var trelloTestToken = "TestTrelloToken";
             string cardID = "test card ID";
             string testCardName = "test card ID";
-            var cardViewModel = new CardViewModel()
+            var cardViewModel = new Card()
             {
                 ID = cardID,
                 Name = testCardName
             };
 
-            var CardDetailViewModel = new CardDetailViewModel()
+            var CardDetailViewModel = new CardViewModel()
             {
                 Card = cardViewModel
             };
@@ -39,7 +39,7 @@ namespace TrelloIntegration.Tests.ViewModels
             };
 
             mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(cardViewModel));
-            var cardDetailViewModel = new CardDetailViewModel();
+            var cardDetailViewModel = new CardViewModel();
             await cardDetailViewModel.SetUp(mockService.Object, user, cardID);
 
             cardDetailViewModel.Card.Should().BeSameAs(cardViewModel);
@@ -54,9 +54,9 @@ namespace TrelloIntegration.Tests.ViewModels
             string cardID = "test card ID";
             string testCardName = "test card ID";
 
-            var commentViewModels = new List<CommentViewModel>()
+            var commentViewModels = new List<Comment>()
             {
-                new CommentViewModel()
+                new Comment()
                 {
                     ID = "test comment ID",
                     Data = new CommentDataViewModel()
@@ -66,13 +66,13 @@ namespace TrelloIntegration.Tests.ViewModels
                 }
             };
 
-            var cardViewModel = new CardViewModel()
+            var cardViewModel = new Card()
             {
                 ID = cardID,
                 Name = testCardName
             };
 
-            var boardDetailViewModel = new CardDetailViewModel()
+            var boardDetailViewModel = new CardViewModel()
             {
                 Card = cardViewModel
             };
@@ -85,8 +85,8 @@ namespace TrelloIntegration.Tests.ViewModels
             };
 
             mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(cardViewModel));
-            mockService.Setup(s => s.GetCommentsForCard(cardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<CommentViewModel>)commentViewModels));
-            var cardDetailViewModel = new CardDetailViewModel();
+            mockService.Setup(s => s.GetCommentsForCard(cardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Comment>)commentViewModels));
+            var cardDetailViewModel = new CardViewModel();
             await cardDetailViewModel.SetUp(mockService.Object, user, cardID);
 
             cardDetailViewModel.Card.Should().BeSameAs(cardViewModel);

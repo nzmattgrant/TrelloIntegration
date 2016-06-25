@@ -11,7 +11,7 @@ namespace TrelloIntegration.ViewModels
     public class DashboardViewModel
     {
         public string UserToken { get; set; }
-        public IEnumerable<BoardViewModel> Boards { get; set; }
+        public IEnumerable<Board> Boards { get; set; }
 
         public async Task SetUp(ITrelloService service, User user)
         {

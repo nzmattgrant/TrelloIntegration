@@ -45,7 +45,7 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var boardDetailViewModel = new BoardDetailViewModel();
+            var boardDetailViewModel = new BoardViewModel();
             await boardDetailViewModel.SetUp(_service, user, boardID);
 
             return View(boardDetailViewModel);
@@ -58,7 +58,7 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var cardDetailViewModel = new CardDetailViewModel();
+            var cardDetailViewModel = new CardViewModel();
             await cardDetailViewModel.SetUp(_service, user, cardID);
 
             return View(cardDetailViewModel);

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace TrelloIntegration.ViewModels
+namespace TrelloIntegration.Models
 {
-    public class CommentViewModel
+    public class Comment
     {
         public string ID { get; set; }
         public CommentDataViewModel Data { get; set; }
@@ -13,7 +13,7 @@ namespace TrelloIntegration.ViewModels
 
     public class CommentDataViewModel
     {
-        public CardViewModel Card { get; set; }
+        public Card Card { get; set; }
         public string Text { get; set; }
     }
 }

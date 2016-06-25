@@ -43,40 +43,40 @@ namespace TrelloIntegration.Services
             return await getFromAPIAsync<User>(uri);
         }
 
-        public async Task<BoardViewModel> GetBoard(string boardID, string userToken)
+        public async Task<Board> GetBoard(string boardID, string userToken)
         {
             var url = string.Format("{0}boards/{1}{2}", API_BASE, boardID, getAuthTokenAPIFragment(userToken));
-            return await getFromAPIAsync<BoardViewModel>(url);
+            return await getFromAPIAsync<Board>(url);
         }
 
-        public async Task<CardViewModel> GetCard(string cardID, string userToken)
+        public async Task<Card> GetCard(string cardID, string userToken)
         {
             var url = string.Format("{0}Cards/{1}{2}", API_BASE, cardID, getAuthTokenAPIFragment(userToken));
-            return await getFromAPIAsync<CardViewModel>(url);
+            return await getFromAPIAsync<Card>(url);
         }
 
-        public async Task<IEnumerable<BoardViewModel>> GetBoardsForUser(string memberID, string userToken)
+        public async Task<IEnumerable<Board>> GetBoardsForUser(string memberID, string userToken)
         {
             var url = string.Format("{0}members/{1}/boards{2}", API_BASE, memberID, getAuthTokenAPIFragment(userToken));
-            return await getCollectionFromAPIAsync<BoardViewModel>(url);
+            return await getCollectionFromAPIAsync<Board>(url);
         }
 
-        public async Task<IEnumerable<ListViewModel>> GetListsForBoard(string boardID, string userToken)
+        public async Task<IEnumerable<List>> GetListsForBoard(string boardID, string userToken)
         {
             var url = string.Format("{0}boards/{1}/lists{2}", API_BASE, boardID, getAuthTokenAPIFragment(userToken));
-            return await getCollectionFromAPIAsync<ListViewModel>(url);
+            return await getCollectionFromAPIAsync<List>(url);
         }
 
-        public async Task<IEnumerable<CardViewModel>> GetCardsForBoard(string boardID, string userToken)
+        public async Task<IEnumerable<Card>> GetCardsForBoard(string boardID, string userToken)
         {
             var url = string.Format("{0}boards/{1}/cards{2}", API_BASE, boardID, getAuthTokenAPIFragment(userToken));
-            return await getCollectionFromAPIAsync<CardViewModel>(url);
+            return await getCollectionFromAPIAsync<Card>(url);
         }
 
-        public async Task<IEnumerable<CommentViewModel>> GetCommentsForCard(string cardID, string userToken)
+        public async Task<IEnumerable<Comment>> GetCommentsForCard(string cardID, string userToken)
         {
             var url = string.Format("{0}cards/{1}/actions{2}&filter=commentCard", API_BASE, cardID, getAuthTokenAPIFragment(userToken));
-            return await getCollectionFromAPIAsync<CommentViewModel>(url);
+            return await getCollectionFromAPIAsync<Comment>(url);
         }
 
         public async Task AddComment(string cardID, string comment, string userToken)

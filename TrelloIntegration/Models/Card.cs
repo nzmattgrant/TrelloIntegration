@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace TrelloIntegration.ViewModels
+namespace TrelloIntegration.Models
 {
-    public class ListViewModel
+    public class Card
     {
         public string ID { get; set; }
         public string Name { get; set; }
-        public string IDBoard { get; set; }
-        public IEnumerable<CardViewModel> Cards { get; set; }
+        public string IDList { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }
