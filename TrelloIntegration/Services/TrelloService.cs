@@ -132,12 +132,12 @@ namespace TrelloIntegration.Services
 
                 foreach (var card in cards)
                 {
-                    card.Comments = comments.Where(c => c.data.card.id == card.id);
+                    card.Comments = comments.Where(c => c.data.card.ID == card.ID);
                 }
 
                 foreach (var list in board.Lists)
                 {
-                    list.Cards = cards.Where(c => c.idList == list.id);
+                    list.Cards = cards.Where(c => c.IDList == list.id);
                 }
             }
             return boards;

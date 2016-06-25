@@ -57,7 +57,7 @@ namespace TrelloIntegration.Controllers
 
             foreach (var list in lists)
             {
-                list.Cards = cards.Where(c => c.idList == list.id);
+                list.Cards = cards.Where(c => c.IDList == list.id);
             }
 
             board.Lists = lists;
@@ -110,10 +110,5 @@ namespace TrelloIntegration.Controllers
 
             return RedirectToAction("Card", "Dashboard", new { cardID = cardID });
         }
-
-        //public async Task<ActionResult> AddComment(string cardID, string comment)
-        //{
-
-
-        //}
+    }
 }
