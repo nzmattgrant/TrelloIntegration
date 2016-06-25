@@ -261,8 +261,8 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\Board.cshtml" />
-    <Content Include="Views\Dashboard\Card.cshtml" />
     <Content Include="Views\Dashboard\DashboardTop.cshtml" />
+    <Content Include="Views\Dashboard\Card.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
