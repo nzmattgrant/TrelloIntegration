@@ -4,6 +4,8 @@
     var userToken = hashFragmentToken ? hashFragmentToken[0].split("=")[1] : null;
     if (userToken) {
 
+        $("button.login").toggleClass("disabled");
+        $("span.loggingInMessage, span.loginMessage").toggleClass("hidden");
         var anitforgeryToken = $("input[name=__RequestVerificationToken]").val()
 
         $.ajax({
@@ -19,6 +21,8 @@
             },
             error: function() { 
                 $(".errorMessage").removeClass("hidden");
+                $("button.login").toggleClass("disabled");
+                $("span.loggingInMessage, span.loginMessage").toggleClass("hidden");
             },
             dataType: "json"
         });
