@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TrelloIntegration.Models;
 using TrelloIntegration.ViewModels;
@@ -23,6 +24,6 @@ namespace TrelloIntegration.Services
 
         Task<IEnumerable<Comment>> GetCommentsForCard(string cardID, string userToken);
 
-        Task AddComment(string cardID, string comment, string userToken);
+        Task<HttpResponseMessage> AddComment(string cardID, string comment, string userToken);
     }
 }

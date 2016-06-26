@@ -98,10 +98,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Controllers\AccountControllerTests.cs" />
-    <Compile Include="Services\TrelloServiceTests.cs" />
     <Compile Include="ViewModels\BoardDetailViewModelTests.cs" />
-    <Compile Include="Controllers\DashboardControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\CardDetailViewModelTests.cs" />
     <Compile Include="ViewModels\DashboardViewModelTests.cs" />

@@ -1,7 +1,12 @@
 ﻿$(document).ready(function () {
-    $.get(getCardDetailUrl, function (result) {
+
+    $.get(getCardDetailUrl)
+    .success(function (result) {
         $("div.cardDetail").html(result);
     })
+    .error(function () {
+        showErrorMessage("There was an error loading the card");
+    });
 
     $("button.submitComment").click(function (e) {
         var button = $(this);
@@ -10,5 +15,5 @@
             e.preventDefault();
         else
             button.addClass("disabled");
-    })
+    });
 });

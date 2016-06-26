@@ -9,13 +9,10 @@ namespace TrelloIntegration.ViewModels
     {
         public Card Card { get; set; }
 
-        public static async Task<CardViewModel> Create(ITrelloService service, User user, string cardID)
+        public async Task SetUp(ITrelloService service, User user, string cardID)
         {
-            return new CardViewModel
-            {
-                Card = await service.GetCard(cardID, user.TrelloToken),
-                UserFullName = user.FullName
-            };
+            Card = await service.GetCard(cardID, user.TrelloToken);
+            UserFullName = user.FullName;
         }
     }
 }

@@ -1,5 +1,10 @@
-﻿$(document).ready(function () {
-    var anitforgeryToken = $("input[name=__RequestVerificationToken]").val()
+﻿var showErrorMessage = function (message) {
+    $("span.errorMessageContent").html(message);
+    $("div.errorMessage").removeClass("hidden");
+}
+
+$(document).ready(function () {
+    var anitforgeryToken = $("input[name=__RequestVerificationToken]").val();
     $("button.logout").click(function () {
         $.ajax({
             type: "POST",
@@ -12,7 +17,7 @@
                     window.location = returnData.newurl;
             },
             error: function () {
-                $(".errorMessage").removeClass("hidden");
+                showErrorMessage("There was a problem logging out")
             },
             dataType: "json"
         });

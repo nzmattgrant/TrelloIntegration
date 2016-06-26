@@ -46,7 +46,8 @@ namespace TrelloIntegration.Tests.ViewModels
             };
 
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
-            var boardViewModel = await BoardViewModel.Create(mockService.Object, user, boardID);
+            var boardViewModel = new BoardViewModel();
+            await boardViewModel.SetUp(mockService.Object, user, boardID);
 
             boardViewModel.Board.Should().BeSameAs(boardViewModel);
         }
@@ -91,7 +92,8 @@ namespace TrelloIntegration.Tests.ViewModels
 
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
             mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)listViewModels));
-            var boardViewModel = await BoardViewModel.Create(mockService.Object, user, boardID);
+            var boardViewModel = new BoardViewModel();
+            await boardViewModel.SetUp(mockService.Object, user, boardID);
 
             boardViewModel.Board.Lists.Should().BeSameAs(listViewModels);
         }
@@ -145,7 +147,8 @@ namespace TrelloIntegration.Tests.ViewModels
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
             mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)listViewModels));
             mockService.Setup(s => s.GetCardsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Card>)cardViewModels));
-            var boardViewModel = await BoardViewModel.Create(mockService.Object, user, boardID);
+            var boardViewModel = new BoardViewModel();
+            await boardViewModel.SetUp(mockService.Object, user, boardID);
 
             boardViewModel.Board.Lists.First().Cards.First().Should().BeSameAs(cardViewModels.First());
         }

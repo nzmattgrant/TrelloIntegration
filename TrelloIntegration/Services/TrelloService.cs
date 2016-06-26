@@ -8,8 +8,6 @@ using TrelloIntegration.ViewModels;
 
 namespace TrelloIntegration.Services
 {
-    //TODO add in tests and error handling
-    //TODO figure out how to get the parent objects returned from the api calls for the breadcrumb
     public class TrelloService : ITrelloService
     {
         private const string API_BASE = "https://api.trello.com/1/";
@@ -79,7 +77,7 @@ namespace TrelloIntegration.Services
             return await getCollectionFromAPIAsync<Comment>(url);
         }
 
-        public async Task AddComment(string cardID, string comment, string userToken)
+        public async Task<HttpResponseMessage> AddComment(string cardID, string comment, string userToken)
         {
             var uri = API_BASE + "cards/" + cardID + "/actions/comments" + getAuthTokenAPIFragment(userToken);
 
@@ -89,7 +87,7 @@ namespace TrelloIntegration.Services
                 {
                     new KeyValuePair<string, string>("text", comment)
                 });
-                var response = await client.PostAsync(uri, commentContent);
+                return await client.PostAsync(uri, commentContent);
             }
         }
 

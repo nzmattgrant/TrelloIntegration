@@ -1,15 +1,10 @@
 ﻿
 <script src="~/Scripts/dashboard.js"></script>
 
-<div class="alert alert-danger hidden" role="alert" ng-show="hasError">
-        <span class="glyphicon glyphicon-exclamation-sign"></span>
-        <span ng-bind="errorMessage"></span>
-    </div>
-
-    <div class="alert alert-success hidden" role="alert" ng-show="showSuccessMessage">
-        <span class="glyphicon glyphicon-exclamation-sign"></span>
-        <span ng-bind="successMessage"></span>
-    </div>
+<div class="errorMessage alert alert-danger hidden" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    <span class="errorMessageContent"></span>
+</div>
 
 <div class="row">
     <div class="col-lg-10">

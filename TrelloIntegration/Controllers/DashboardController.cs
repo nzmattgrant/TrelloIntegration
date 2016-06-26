@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using TrelloIntegration.DAL;
 using TrelloIntegration.Models;
@@ -20,7 +21,6 @@ namespace TrelloIntegration.Controllers
             _db = new TrelloIntegrationContext();
         }
 
-        //TODO Set this up with dependancy injection 
         public DashboardController(ITrelloService service, ITrelloIntegrationContext db)
         {
             _service = service;
@@ -42,9 +42,12 @@ namespace TrelloIntegration.Controllers
         {
             var user = getUserUsingCookie();
             if (user == null)
-                return RedirectToAction("Login", "Account");
+                //Return a http error instead of redirecting because this is a partial being retreived via Ajax
+                throw new HttpException(401, "Not authorized");
+            var boardsViewModel = new BoardsViewModel();
+            await boardsViewModel.SetUp(_service, user);
 
-            return PartialView(await BoardsViewModel.Create(_service, user));
+            return PartialView(boardsViewModel);
         }
 
         [HttpGet]
@@ -54,7 +57,11 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var boardViewModel = await BoardViewModel.Create(_service, user, boardID);
+            var boardViewModel = new BoardViewModel();
+            await boardViewModel.SetUp(_service, user, boardID);
+
+            if (string.IsNullOrWhiteSpace(boardViewModel.Board.ID))
+                throw new HttpException(404, "Not found");
 
             return View(boardViewModel);
         }
@@ -64,8 +71,8 @@ namespace TrelloIntegration.Controllers
         {
             var user = getUserUsingCookie();
             if (user == null)
-                return RedirectToAction("Login", "Account");
-                //TODO return json result?
+                //Return a http error instead of redirecting because this is a partial being retreived via Ajax
+                throw new HttpException(401, "Not authorized");
 
             var boardDetailViewModel = new BoardDetailViewModel();
             await boardDetailViewModel.SetUp(_service, user, boardID);
@@ -80,7 +87,11 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var cardViewModel = await CardViewModel.Create(_service, user, cardID);
+            var cardViewModel = new CardViewModel();
+            await cardViewModel.SetUp(_service, user, cardID);
+
+            if (string.IsNullOrWhiteSpace(cardViewModel.Card.ID))
+                throw new HttpException(404, "Not found");
 
             return View(cardViewModel);
         }
@@ -90,7 +101,8 @@ namespace TrelloIntegration.Controllers
         {
             var user = getUserUsingCookie();
             if (user == null)
-                return RedirectToAction("Login", "Account");
+                //Return a http error instead of redirecting because this is a partial being retreived via Ajax
+                throw new HttpException(401, "Not authorized");
 
             var cardDetailViewModel = new CardDetailViewModel();
             await cardDetailViewModel.SetUp(_service, user, cardID);
@@ -105,7 +117,9 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            await _service.AddComment(cardID, comment, user.TrelloToken);
+            var response = await _service.AddComment(cardID, comment, user.TrelloToken);
+
+            TempData["wasCommentAdded"] = response.IsSuccessStatusCode;
 
             return RedirectToAction("Card", "Dashboard", new { cardID = cardID });
         }

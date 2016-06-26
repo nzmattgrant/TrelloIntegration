@@ -9,13 +9,10 @@ namespace TrelloIntegration.ViewModels
     { 
         public Board Board { get; set; }
 
-        public static async Task<BoardViewModel> Create(ITrelloService service, User user, string boardID)
+        public async Task SetUp(ITrelloService service, User user, string boardID)
         {
-            return new BoardViewModel
-            {
-                Board = await service.GetBoard(boardID, user.TrelloToken),
-                UserFullName = user.FullName
-            };
+            Board = await service.GetBoard(boardID, user.TrelloToken);
+            UserFullName = user.FullName;
         }
     }
 }
