@@ -238,6 +238,7 @@
     </Content>
     <None Include="Properties\PublishProfiles\TrelloIntegrationDemo - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\TrelloIntegrationDemo - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\TrelloIntegrationDemo.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\card.js" />
     <Content Include="Scripts\dashboard.js" />

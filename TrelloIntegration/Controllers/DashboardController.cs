@@ -44,6 +44,7 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 //Return a http error instead of redirecting because this is a partial being retreived via Ajax
                 throw new HttpException(401, "Not authorized");
+
             var boardsViewModel = new BoardsViewModel();
             await boardsViewModel.SetUp(_service, user);
 

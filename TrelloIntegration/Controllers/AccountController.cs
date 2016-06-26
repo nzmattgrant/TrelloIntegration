@@ -11,38 +11,31 @@ namespace TrelloIntegration.Controllers
     public class AccountController : Controller
     {
         private const string TRELLO_USER_COOKIE_NAME = "TrelloIntegrationUser";
-        private ITrelloIntegrationContext _db = new TrelloIntegrationContext();
+        private ITrelloIntegrationContext _db { get; set; }
+        private ITrelloService _service { get; set; }
 
         public AccountController()
         {
             _db = new TrelloIntegrationContext();
+            _service = new TrelloService();
         }
 
-        public AccountController(ITrelloIntegrationContext db)
+        public AccountController(ITrelloIntegrationContext db, ITrelloService service)
         {
             _db = db;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult Login()
         {
-            var userCookie = HttpContext.Request.Cookies.Get(TRELLO_USER_COOKIE_NAME);
-
-            if (userCookie == null)
-                return View();
-
-            var userID = userCookie.Value;
-
-            if (string.IsNullOrWhiteSpace(userCookie.Value))
-                return View();
-
-            return RedirectToAction("Index", "Dashboard");
+            return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(string token)
         {
-            var user = await new TrelloService().GetMemberForUserToken(token);
+            var user = await _service.GetMemberForUserToken(token);
 
             if (user == null)
                 return Json(new { ok = false });
@@ -71,7 +64,7 @@ namespace TrelloIntegration.Controllers
 
            _db.SaveChanges();
 
-            return Json(new { ok = true, newurl = Url.Action("Login") });
+            return Json(new { ok = true, newurl = Url.Action("Index", "Dashboard", null) });
         }
 
         [HttpPost, ValidateAntiForgeryToken]

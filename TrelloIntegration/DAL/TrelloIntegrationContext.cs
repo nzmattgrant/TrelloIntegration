@@ -15,7 +15,10 @@ namespace TrelloIntegration.DAL
 
     public class TrelloIntegrationContext : DbContext, ITrelloIntegrationContext
     {
-        public TrelloIntegrationContext() : base("TrelloIntegrationContext") { }
+        public TrelloIntegrationContext() : base("TrelloIntegrationContext")
+        {
+            Database.SetInitializer<TrelloIntegrationContext>(new CreateDatabaseIfNotExists<TrelloIntegrationContext>());
+        }
 
         public DbSet<User> Users { get; set; }
 
