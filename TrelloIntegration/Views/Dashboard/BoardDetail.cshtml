@@ -1,0 +1,24 @@
+﻿@model TrelloIntegration.ViewModels.BoardDetailViewModel
+
+@foreach (var list in Model.Board.Lists)
+{
+    <div class="list-group-item">
+        <div class="list-group">
+            <div class="list-group-item-heading">
+                <h1>
+                    @list.Name
+                </h1>
+            </div>
+            @foreach (var card in list.Cards)
+            {
+                <a class="btn btn-block btn-default" href="/dashboard/card/@card.ID">
+                    <h2>
+                        @card.Name
+                    </h2>
+                </a>
+            }
+        </div>
+    </div>
+}
+
+

@@ -1,0 +1,23 @@
+﻿@model TrelloIntegration.ViewModels.CardDetailViewModel
+
+<div class="panel comments">
+    @using (Html.BeginForm("AddComment", "Dashboard", null, FormMethod.Post, new { @class = "navbar-form" }))
+    {
+        <div class="input-group-btn">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="cardID" value="@Model.Card.ID">
+            <input class="form-control comment" name="comment" type="text">
+            <button class="btn btn-success submitComment" placeholder="Enter a comment" type="submit">Add Comment</button>
+        </div>
+    }
+    <div>
+        <ul>
+            @foreach (var comment in Model.Card.Comments)
+            {
+                <li>
+                    <span>@comment.Data.Text</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

@@ -26,7 +26,7 @@ namespace TrelloIntegration.Tests.ViewModels
                 Name = testCardName
             };
 
-            var CardDetailViewModel = new CardViewModel()
+            var CardDetailViewModel = new CardDetailViewModel()
             {
                 Card = cardViewModel
             };
@@ -39,7 +39,7 @@ namespace TrelloIntegration.Tests.ViewModels
             };
 
             mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(cardViewModel));
-            var cardDetailViewModel = new CardViewModel();
+            var cardDetailViewModel = new CardDetailViewModel();
             await cardDetailViewModel.SetUp(mockService.Object, user, cardID);
 
             cardDetailViewModel.Card.Should().BeSameAs(cardViewModel);
@@ -66,15 +66,15 @@ namespace TrelloIntegration.Tests.ViewModels
                 }
             };
 
-            var cardViewModel = new Card()
+            var card = new Card()
             {
                 ID = cardID,
                 Name = testCardName
             };
 
-            var boardDetailViewModel = new CardViewModel()
+            var boardDetailViewModel = new CardDetailViewModel()
             {
-                Card = cardViewModel
+                Card = card
             };
 
             var user = new User
@@ -84,12 +84,12 @@ namespace TrelloIntegration.Tests.ViewModels
                 TrelloToken = trelloTestToken
             };
 
-            mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(cardViewModel));
+            mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(card));
             mockService.Setup(s => s.GetCommentsForCard(cardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Comment>)commentViewModels));
-            var cardDetailViewModel = new CardViewModel();
+            var cardDetailViewModel = new CardDetailViewModel();
             await cardDetailViewModel.SetUp(mockService.Object, user, cardID);
 
-            cardDetailViewModel.Card.Should().BeSameAs(cardViewModel);
+            cardDetailViewModel.Card.Should().BeSameAs(card);
         }
     }
 }

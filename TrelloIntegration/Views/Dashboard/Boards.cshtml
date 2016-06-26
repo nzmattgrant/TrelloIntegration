@@ -1,0 +1,10 @@
+﻿@model TrelloIntegration.ViewModels.BoardsViewModel
+
+@foreach (var board in Model.Boards)
+{
+    <a class="btn btn-block btn-default" href="/dashboard/board/@board.ID">
+        <h1>
+            @board.Name
+        </h1>
+    </a>
+}

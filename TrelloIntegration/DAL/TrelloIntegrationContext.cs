@@ -7,7 +7,13 @@ using TrelloIntegration.Models;
 
 namespace TrelloIntegration.DAL
 {
-    public class TrelloIntegrationContext : DbContext
+    public interface ITrelloIntegrationContext
+    {
+        DbSet<User> Users { get; set; }
+        int SaveChanges();
+    }
+
+    public class TrelloIntegrationContext : DbContext, ITrelloIntegrationContext
     {
         public TrelloIntegrationContext() : base("TrelloIntegrationContext") { }
 

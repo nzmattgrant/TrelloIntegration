@@ -1,0 +1,11 @@
+﻿@model string
+<script>
+    var logoutAction = "@Url.Action("Logout", "Account", null)";
+</script>
+
+<div class="navbar-brand pull-right">
+    <div class="navbar-text">
+        Hi @Model!
+    </div>
+    <button class="btn navbar-btn btn-primary logout pull-right">Log out</button>
+</div>

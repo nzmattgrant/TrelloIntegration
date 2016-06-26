@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.Routing;
 using TrelloIntegration.DAL;
 using TrelloIntegration.Models;
 using TrelloIntegration.Services;
@@ -12,7 +11,7 @@ namespace TrelloIntegration.Controllers
     public class DashboardController : Controller
     {
         private const string TRELLO_USER_COOKIE_NAME = "TrelloIntegrationUser";
-        private TrelloIntegrationContext _db { get; set; }
+        private ITrelloIntegrationContext _db { get; set; }
         private ITrelloService _service { get; set; }
 
         public DashboardController()
@@ -22,33 +21,56 @@ namespace TrelloIntegration.Controllers
         }
 
         //TODO Set this up with dependancy injection 
-        public DashboardController(ITrelloService service, TrelloIntegrationContext db)
+        public DashboardController(ITrelloService service, ITrelloIntegrationContext db)
         {
             _service = service;
             _db = db;
         }
 
-        public async Task<ActionResult> Index()
+        [HttpGet]
+        public ActionResult Index()
+        {
+            var user = getUserUsingCookie();
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+            
+            return View(new DashboardViewModel(user.FullName));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Boards()
         {
             var user = getUserUsingCookie();
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var dashboardViewModel = new DashboardViewModel();
-            await dashboardViewModel.SetUp(_service, user);
-            return View(dashboardViewModel);
+            return PartialView(await BoardsViewModel.Create(_service, user));
         }
 
+        [HttpGet]
         public async Task<ActionResult> Board(string boardID)
         {
             var user = getUserUsingCookie();
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var boardDetailViewModel = new BoardViewModel();
+            var boardViewModel = await BoardViewModel.Create(_service, user, boardID);
+
+            return View(boardViewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> BoardDetail(string boardID)
+        {
+            var user = getUserUsingCookie();
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+                //TODO return json result?
+
+            var boardDetailViewModel = new BoardDetailViewModel();
             await boardDetailViewModel.SetUp(_service, user, boardID);
 
-            return View(boardDetailViewModel);
+            return PartialView(boardDetailViewModel);
         }
 
         [HttpGet]
@@ -58,10 +80,22 @@ namespace TrelloIntegration.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            var cardDetailViewModel = new CardViewModel();
+            var cardViewModel = await CardViewModel.Create(_service, user, cardID);
+
+            return View(cardViewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CardDetail(string cardID)
+        {
+            var user = getUserUsingCookie();
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+
+            var cardDetailViewModel = new CardDetailViewModel();
             await cardDetailViewModel.SetUp(_service, user, cardID);
 
-            return View(cardDetailViewModel);
+            return PartialView(cardDetailViewModel);
         }
 
         [HttpPost, ValidateAntiForgeryToken]

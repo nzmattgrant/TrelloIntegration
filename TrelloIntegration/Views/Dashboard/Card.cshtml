@@ -4,31 +4,26 @@
     ViewBag.Title = Model.Card.Name;
 }
 
+<script>
+    var getCardDetailUrl = "@Url.Action("CardDetail", "Dashboard", new { cardID = @Model.Card.ID})"
+</script>
+<script src="~/Scripts/card.js"></script>
+
 <div class="container">
+    <div class="navbar navbar-default">
+        <div class="navbar-brand pull-left navbar-text">
+            <a class="navbar-link" href="@Url.Action("Index", "Dashboard")">Home</a> |
+            <a class="navbar-link" href="@Url.Action("Board", "Dashboard", new { boardId = Model.Card.IDBoard })">Back to board</a>
+        </div>
+
+        @Html.Partial("UserPanel", Model.UserFullName)
+    </div>
 
    @Html.Partial("DashboardTop")
 
     <div class="well">
-        <div class="panel comments">
-            @using (Html.BeginForm("AddComment", "Dashboard", null, FormMethod.Post, new { @class = "navbar-form" }))
-            {
-                <div class="input-group-btn">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="cardID" value="@Model.Card.ID">
-                    <input class="form-control comment" name="comment" type="text">
-                    <button class="btn btn-success submitComment" placeholder="Enter a comment" type="submit">Add Comment</button>
-                </div>
-            }
-            <div class="panel">
-                <ul>
-                    @foreach (var comment in Model.Card.Comments)
-                    {
-                        <li>
-                            <span>@comment.Data.Text</span>
-                        </li>
-                    }
-                </ul>
-            </div>
+        <div class="cardDetail">
+            <h1>Loading card...</h1>
         </div>
     </div>
 </div>

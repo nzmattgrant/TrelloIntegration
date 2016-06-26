@@ -2,23 +2,23 @@
 
 @{
     ViewBag.Title = "Your Trello Boards";
-
 }
 
-<script src="~/Scripts/dashboard.js"></script>
+<script>
+    var getBoardsUrl = "@Url.Action("Boards", "Dashboard", null)";
+</script>
+<script src="~/Scripts/index.js"></script>
 
 <div class="container">
+    <div class="navbar navbar-default">
+        @Html.Partial("UserPanel", Model.UserFullName)
+    </div>
 
     @Html.Partial("DashboardTop")
 
     <div class="well">
-        @foreach (var board in Model.Boards)
-        {
-            <a class="btn btn-block btn-default" href="/dashboard/board/@board.ID">
-                <h1>
-                    @board.Name
-                </h1>
-            </a>
-        }
+       <div class="boards">
+           <h1>Loading your boards...</h1>
+       </div>
     </div>
 </div>

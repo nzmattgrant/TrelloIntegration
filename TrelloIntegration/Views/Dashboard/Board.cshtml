@@ -1,35 +1,26 @@
-﻿
-@model TrelloIntegration.ViewModels.BoardViewModel
-
+﻿@model TrelloIntegration.ViewModels.BoardViewModel
 @{
     ViewBag.Title = Model.Board.Name;
 }
+<script>
+    var getBoardDetailUrl = "@Url.Action("BoardDetail", "Dashboard", new { boardID = @Model.Board.ID})"
+</script>
+<script src="~/Scripts/board.js"></script>
 
 <div class="container">
+    <div class="navbar navbar-default">
+        <div class="navbar-brand pull-left navbar-text">
+            <a class="navbar-link" href="@Url.Action("Index", "Dashboard")">Home</a>
+        </div>
+
+        @Html.Partial("UserPanel", Model.UserFullName)
+    </div>
 
     @Html.Partial("DashboardTop")
 
     <div class="well">
-        @foreach (var list in Model.Board.Lists)
-        {
-            <div class="list-group-item">
-                <div class="list-group">
-                    <div class="list-group-item-heading">
-                        <h1>
-                            @list.Name
-                        </h1>
-                    </div>
-                    @foreach (var card in list.Cards)
-                    {
-                        <a class="btn btn-block btn-default" href="/dashboard/card/@card.ID">
-                            <h2>
-                                @card.Name
-                            </h2>
-                        </a>
-                    }
-                </div>
-            </div>
-        }
+        <div class="boardDetail">
+            <h1>Loading board...</h1>
+        </div>
     </div>
 </div>
-

@@ -10,6 +10,7 @@ namespace TrelloIntegration.Models
         public string ID { get; set; }
         public string Name { get; set; }
         public string IDList { get; set; }
+        public string IDBoard { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
     }
 }
