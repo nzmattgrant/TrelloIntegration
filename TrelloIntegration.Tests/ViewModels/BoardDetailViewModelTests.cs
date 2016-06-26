@@ -15,41 +15,22 @@ namespace TrelloIntegration.Tests.ViewModels
     [TestClass]
     public class BoardDetailViewModelTests
     {
-        public BoardDetailViewModelTests()
-        {
-            //TODO set up the boards            
-        }
-
         [TestMethod]
         public async Task SetUp_Should_AddBoard()
         {
             var mockService = new Mock<ITrelloService>();
             var trelloTestToken = "TestTrelloToken";
             string boardID = "test board ID";
-            string testBoardName = "test board ID";
-            var board = new Board
-            {
-                ID = boardID,
-                Name = testBoardName
-            }; 
 
-            var boardDetailViewModel = new BoardViewModel()
-            {
-                Board = board
-            };
-
-            var user = new User
-            {
-                ID = "TestID",
-                FullName = "TestFullName",
-                TrelloToken = trelloTestToken
-            };
+            //Set up unnested cards and test they are nested after setup
+            var board = TestHelpers.CreateTestBoardWithBoardID(boardID);
+            var user = TestHelpers.CreateTestUserWithTrelloToken(trelloTestToken);
 
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
-            var boardViewModel = new BoardViewModel();
+            var boardViewModel = new BoardDetailViewModel();
             await boardViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Should().BeSameAs(boardViewModel);
+            boardViewModel.Board.Should().BeSameAs(board);
         }
 
         [TestMethod]
@@ -58,99 +39,51 @@ namespace TrelloIntegration.Tests.ViewModels
             var mockService = new Mock<ITrelloService>();
             var trelloTestToken = "TestTrelloToken";
             string boardID = "test board ID";
-            string testBoardName = "test board ID";
+            string listID = "test list ID";
 
-            var listViewModels = new List<List>()
-            {
-                new List ()
-                {
-                    ID  = "TestListID1"
-                },
-                new List()
-                {
-                    ID  = "TestListID2"
-                }
-            };
-
-            var board = new Board
-            {
-                ID = boardID,
-                Name = testBoardName
-            };
-
-            var boardDetailViewModel = new BoardViewModel()
-            {
-                Board = board
-            };
-
-            var user = new User
-            {
-                ID = "TestID",
-                FullName = "TestFullName",
-                TrelloToken = trelloTestToken
-            };
+            //Set up unnested cards and test they are nested after setup
+            var list = TestHelpers.CreateTestListWithListID(listID);
+            list.IDBoard = boardID;
+            var lists = TestHelpers.CreateTestListsListFromList(list);
+            var board = TestHelpers.CreateTestBoardWithBoardID(boardID);
+            var user = TestHelpers.CreateTestUserWithTrelloToken(trelloTestToken);
 
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
-            mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)listViewModels));
-            var boardViewModel = new BoardViewModel();
+            mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)lists));
+            var boardViewModel = new BoardDetailViewModel();
             await boardViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Lists.Should().BeSameAs(listViewModels);
+            boardViewModel.Board.Lists.First().Should().BeSameAs(list);
         }
 
         [TestMethod]
         public async Task SetUp_Should_AddBoardWithCards()
         {
             var mockService = new Mock<ITrelloService>();
+
             var trelloTestToken = "TestTrelloToken";
             string boardID = "test board ID";
-            string testBoardName = "test board ID";
-            string firstListID = "TestListID1";
-            var cardViewModels = new List<Card>()
-            {
-                new Card ()
-                {
-                    ID  = "TestCardID1",
-                    Name = "Test card name",
-                    IDList = firstListID
-                }
-            };
+            string listID = "test list ID";
+            var cardID = "test card ID";
 
-            var listViewModels = new List<List>()
-            {
-                new List ()
-                {
-                    ID  = firstListID,
-                    Name = "Test card name",
-                    Cards = cardViewModels
-                }
-            };
-
-            var board = new Board
-            {
-                ID = boardID,
-                Name = testBoardName
-            };
-
-            var boardDetailViewModel = new BoardViewModel()
-            {
-                Board = board
-            };
-
-            var user = new User
-            {
-                ID = "TestID",
-                FullName = "TestFullName",
-                TrelloToken = trelloTestToken
-            };
+            //Set up unnested cards and test they are nested after setup
+            var card = TestHelpers.CreateTestCardWithCardID(cardID);
+            card.IDList = listID;
+            card.IDBoard = boardID;
+            var cards = TestHelpers.CreateTestCardsListFromCard(card);
+            var list = TestHelpers.CreateTestListWithListID(listID);
+            list.IDBoard = boardID;
+            var lists = TestHelpers.CreateTestListsListFromList(list);
+            var board = TestHelpers.CreateTestBoardWithBoardID(boardID);
+            var user = TestHelpers.CreateTestUserWithTrelloToken(trelloTestToken);
 
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
-            mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)listViewModels));
-            mockService.Setup(s => s.GetCardsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Card>)cardViewModels));
-            var boardViewModel = new BoardViewModel();
+            mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)lists));
+            mockService.Setup(s => s.GetCardsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Card>)cards));
+            var boardViewModel = new BoardDetailViewModel();
             await boardViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Lists.First().Cards.First().Should().BeSameAs(cardViewModels.First());
+            boardViewModel.Board.Lists.First().Cards.First().Should().BeSameAs(card);
         }
 
     }

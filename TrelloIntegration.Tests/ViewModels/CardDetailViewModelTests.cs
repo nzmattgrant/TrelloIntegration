@@ -18,31 +18,17 @@ namespace TrelloIntegration.Tests.ViewModels
         {
             var mockService = new Mock<ITrelloService>();
             var trelloTestToken = "TestTrelloToken";
-            string cardID = "test card ID";
-            string testCardName = "test card ID";
-            var cardViewModel = new Card()
-            {
-                ID = cardID,
-                Name = testCardName
-            };
+            var cardID = "test card ID";
 
-            var CardDetailViewModel = new CardDetailViewModel()
-            {
-                Card = cardViewModel
-            };
+            //Set up unnested cards and test they are nested after setup
+            var card = TestHelpers.CreateTestCardWithCardID(cardID);
+            var user = TestHelpers.CreateTestUserWithTrelloToken(trelloTestToken);
 
-            var user = new User
-            {
-                ID = "TestID",
-                FullName = "TestFullName",
-                TrelloToken = trelloTestToken
-            };
-
-            mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(cardViewModel));
+            mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(card));
             var cardDetailViewModel = new CardDetailViewModel();
             await cardDetailViewModel.SetUp(mockService.Object, user, cardID);
 
-            cardDetailViewModel.Card.Should().BeSameAs(cardViewModel);
+            cardDetailViewModel.Card.Should().BeSameAs(card);
         }
 
 
@@ -51,41 +37,18 @@ namespace TrelloIntegration.Tests.ViewModels
         {
             var mockService = new Mock<ITrelloService>();
             var trelloTestToken = "TestTrelloToken";
-            string cardID = "test card ID";
-            string testCardName = "test card ID";
+            var cardID = "test card ID";
+            var commentID = "test comment ID";
 
-            var commentViewModels = new List<Comment>()
-            {
-                new Comment()
-                {
-                    ID = "test comment ID",
-                    Data = new CommentDataViewModel()
-                    {
-                        Text = "Test comment text"
-                    } 
-                }
-            };
+            //Set up unnested cards and test they are nested after setup
+            var card = TestHelpers.CreateTestCardWithCardID(cardID);
+            var user = TestHelpers.CreateTestUserWithTrelloToken(trelloTestToken);
 
-            var card = new Card()
-            {
-                ID = cardID,
-                Name = testCardName
-            };
-
-            var boardDetailViewModel = new CardDetailViewModel()
-            {
-                Card = card
-            };
-
-            var user = new User
-            {
-                ID = "TestID",
-                FullName = "TestFullName",
-                TrelloToken = trelloTestToken
-            };
+            var comment = TestHelpers.CreateTestCommentWithCommentID(commentID);
+            var comments = TestHelpers.CreateTestCommentListFromComment(comment);
 
             mockService.Setup(s => s.GetCard(cardID, trelloTestToken)).Returns(Task.FromResult(card));
-            mockService.Setup(s => s.GetCommentsForCard(cardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Comment>)commentViewModels));
+            mockService.Setup(s => s.GetCommentsForCard(cardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Comment>)comments));
             var cardDetailViewModel = new CardDetailViewModel();
             await cardDetailViewModel.SetUp(mockService.Object, user, cardID);
 
