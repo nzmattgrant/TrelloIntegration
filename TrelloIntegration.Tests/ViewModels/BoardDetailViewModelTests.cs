@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TrelloIntegration.Models;
 using TrelloIntegration.Services;
@@ -20,7 +18,7 @@ namespace TrelloIntegration.Tests.ViewModels
         {
             var mockService = new Mock<ITrelloService>();
             var trelloTestToken = "TestTrelloToken";
-            string boardID = "test board ID";
+            var boardID = "test board ID";
 
             //Set up unnested cards and test they are nested after setup
             var board = TestHelpers.CreateTestBoardWithBoardID(boardID);
@@ -38,8 +36,8 @@ namespace TrelloIntegration.Tests.ViewModels
         {
             var mockService = new Mock<ITrelloService>();
             var trelloTestToken = "TestTrelloToken";
-            string boardID = "test board ID";
-            string listID = "test list ID";
+            var boardID = "test board ID";
+            var listID = "test list ID";
 
             //Set up unnested cards and test they are nested after setup
             var list = TestHelpers.CreateTestListWithListID(listID);
@@ -62,8 +60,8 @@ namespace TrelloIntegration.Tests.ViewModels
             var mockService = new Mock<ITrelloService>();
 
             var trelloTestToken = "TestTrelloToken";
-            string boardID = "test board ID";
-            string listID = "test list ID";
+            var boardID = "test board ID";
+            var listID = "test list ID";
             var cardID = "test card ID";
 
             //Set up unnested cards and test they are nested after setup
