@@ -20,7 +20,6 @@ namespace TrelloIntegration.Tests.ViewModels
             var trelloTestToken = "TestTrelloToken";
             var boardID = "test board ID";
 
-            //Set up unnested cards and test they are nested after setup
             var board = TestHelpers.CreateTestBoardWithBoardID(boardID);
             var user = TestHelpers.CreateTestUserWithTrelloToken(trelloTestToken);
 
@@ -39,7 +38,6 @@ namespace TrelloIntegration.Tests.ViewModels
             var boardID = "test board ID";
             var listID = "test list ID";
 
-            //Set up unnested cards and test they are nested after setup
             var list = TestHelpers.CreateTestListWithListID(listID);
             list.IDBoard = boardID;
             var lists = TestHelpers.CreateTestListsListFromList(list);
