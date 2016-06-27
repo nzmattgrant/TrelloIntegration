@@ -70,11 +70,6 @@ namespace TrelloIntegration.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
-            var userCookie = HttpContext.Request.Cookies.Get(TRELLO_USER_COOKIE_NAME);
-
-            if (userCookie == null)
-                return Json(new { ok = true, newurl = Url.Action("Login") });
-
             //Expire user cookie
             Response.Cookies.Add(new HttpCookie(TRELLO_USER_COOKIE_NAME)
             {

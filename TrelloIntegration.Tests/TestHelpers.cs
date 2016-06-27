@@ -6,16 +6,6 @@ namespace TrelloIntegration.Tests
 {
     public static class TestHelpers
     {
-        public static User CreateTestUser()
-        {
-            return new User
-            {
-                ID = "test ID",
-                FullName = "test full name",
-                TrelloToken = "test trello token"
-            };
-        }
-
         public static User CreateTestUserWithTrelloToken(string token)
         {
             return new User
@@ -23,6 +13,14 @@ namespace TrelloIntegration.Tests
                 ID = "test ID",
                 FullName = "test full name",
                 TrelloToken = token
+            };
+        }
+
+        public static List<Comment> CreateTestCommentListFromComment(Comment comment)
+        {
+            return new List<Comment>()
+            {
+                comment
             };
         }
 
@@ -35,14 +33,6 @@ namespace TrelloIntegration.Tests
                 {
                     Text = "Test comment text"
                 }
-            };
-        }
-
-        public static List<Comment> CreateTestCommentListFromComment(Comment comment)
-        {
-            return new List<Comment>()
-            {
-                comment
             };
         }
 
@@ -80,20 +70,20 @@ namespace TrelloIntegration.Tests
             };
         }
 
+        public static List<Board> CreateTestBoardsListFromBoard(Board board)
+        {
+            return new List<Board>()
+            {
+                board
+            };
+        }
+
         public static Board CreateTestBoardWithBoardID(string boardID)
         {
             return new Board
             {
                 ID = boardID,
                 Name = "Test board name"
-            };
-        }
-
-        public static BoardViewModel CreateTestBoardViewModelWithBoard(Board board)
-        {
-            return new BoardViewModel
-            {
-                Board = board
             };
         }
     }
