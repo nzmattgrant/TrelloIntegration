@@ -52,7 +52,7 @@ namespace TrelloIntegration.Tests.ViewModels
             var cardDetailViewModel = new CardDetailViewModel();
             await cardDetailViewModel.SetUp(mockService.Object, user, cardID);
 
-            cardDetailViewModel.Card.Should().BeSameAs(card);
+            cardDetailViewModel.Card.Comments.Should().BeEquivalentTo(comments);
         }
     }
 }

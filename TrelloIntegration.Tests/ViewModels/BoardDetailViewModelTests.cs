@@ -53,7 +53,7 @@ namespace TrelloIntegration.Tests.ViewModels
             var boardViewModel = new BoardDetailViewModel();
             await boardViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Lists.First().Should().BeSameAs(list);
+            boardViewModel.Board.Lists.Should().BeEquivalentTo(lists);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace TrelloIntegration.Tests.ViewModels
             var boardViewModel = new BoardDetailViewModel();
             await boardViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Lists.First().Cards.First().Should().BeSameAs(card);
+            boardViewModel.Board.Lists.First().Cards.Should().BeEquivalentTo(cards);
         }
 
     }

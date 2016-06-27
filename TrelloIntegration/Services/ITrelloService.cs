@@ -8,8 +8,6 @@ namespace TrelloIntegration.Services
 {
     public interface ITrelloService
     {
-        Task<string> GetMemberIDForUserToken(string userToken);
-
         Task<User> GetMemberForUserToken(string userToken);
 
         Task<Board> GetBoard(string boardID, string userToken);

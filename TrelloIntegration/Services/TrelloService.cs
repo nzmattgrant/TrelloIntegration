@@ -18,23 +18,6 @@ namespace TrelloIntegration.Services
             return "?key=" + APPLICATION_KEY + "&token=" + userToken;
         }
 
-        public async Task<string> GetMemberIDForUserToken(string userToken)
-        {
-            using (var client = new HttpClient())
-            {
-                var uri = API_BASE + "tokens/" + userToken + "?key=" + APPLICATION_KEY;
-                var response = await client.GetAsync(uri);
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    JObject returnedObject = JObject.Parse(json);
-                    return returnedObject["idMember"].ToString();
-                }
-
-                return "";
-            }
-        }
-
         public async Task<User> GetMemberForUserToken(string userToken)
         {
             var uri = API_BASE + "tokens/" + userToken + "/member?key=" + APPLICATION_KEY;
