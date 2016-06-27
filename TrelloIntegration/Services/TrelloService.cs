@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TrelloIntegration.Models;
-using TrelloIntegration.ViewModels;
 
 namespace TrelloIntegration.Services
 {
