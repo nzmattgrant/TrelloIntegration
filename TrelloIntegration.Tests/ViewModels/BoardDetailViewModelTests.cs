@@ -24,10 +24,10 @@ namespace TrelloIntegration.Tests.ViewModels
             var user = TestHelpers.CreateTestUserWithTrelloToken(trelloTestToken);
 
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
-            var boardViewModel = new BoardDetailViewModel();
-            await boardViewModel.SetUp(mockService.Object, user, boardID);
+            var boardDetailViewModel = new BoardDetailViewModel();
+            await boardDetailViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Should().BeSameAs(board);
+            boardDetailViewModel.Board.Should().BeSameAs(board);
         }
 
         [TestMethod]
@@ -46,10 +46,10 @@ namespace TrelloIntegration.Tests.ViewModels
 
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
             mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)lists));
-            var boardViewModel = new BoardDetailViewModel();
-            await boardViewModel.SetUp(mockService.Object, user, boardID);
+            var boardDetailViewModel = new BoardDetailViewModel();
+            await boardDetailViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Lists.Should().BeEquivalentTo(lists);
+            boardDetailViewModel.Board.Lists.Should().BeEquivalentTo(lists);
         }
 
         [TestMethod]
@@ -76,10 +76,10 @@ namespace TrelloIntegration.Tests.ViewModels
             mockService.Setup(s => s.GetBoard(boardID, trelloTestToken)).Returns(Task.FromResult(board));
             mockService.Setup(s => s.GetListsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<List>)lists));
             mockService.Setup(s => s.GetCardsForBoard(boardID, trelloTestToken)).Returns(Task.FromResult((IEnumerable<Card>)cards));
-            var boardViewModel = new BoardDetailViewModel();
-            await boardViewModel.SetUp(mockService.Object, user, boardID);
+            var boardDetailViewModel = new BoardDetailViewModel();
+            await boardDetailViewModel.SetUp(mockService.Object, user, boardID);
 
-            boardViewModel.Board.Lists.First().Cards.Should().BeEquivalentTo(cards);
+            boardDetailViewModel.Board.Lists.First().Cards.Should().BeEquivalentTo(cards);
         }
 
     }
